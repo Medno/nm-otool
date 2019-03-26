@@ -18,7 +18,9 @@ NAME = $(NM) $(OTOOL)
 
 #------All sources------#
 
-MAIN_SRCS = main.c
+MAIN_SRCS = nm.c			\
+			error.c			\
+			list_symbols.c	
 
 OBJ += $(addprefix ./$(OBJ_PATH)/, $(MAIN_SRCS:.c=.o))
 

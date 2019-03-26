@@ -60,7 +60,7 @@ FTPRINTF = ft_printf.c	\
 
 #------Library------#
 
-INCLUDES = ./includes/
+INCLUDES = ./inc/
 INC += -I$(INCLUDES)
 INC += -I $(LIB_PATH)
 HEAD = $(INCLUDES)/libft.h	\

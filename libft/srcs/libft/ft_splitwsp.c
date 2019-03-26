@@ -30,8 +30,8 @@ char			**ft_splitwsp(char *str)
 
 	i = 0;
 	j = 0;
-	if (!(tab = (char **)malloc(sizeof(char *) * ft_nbwords(str) + 1)) ||
-			!len_wsp(str))
+	if (!(tab = (char **)malloc(sizeof(char *) * ft_nbwords(str) + 1))
+		|| !len_wsp(str))
 		return (NULL);
 	while (str[i])
 	{
