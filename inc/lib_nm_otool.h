@@ -5,6 +5,7 @@
 # include <fcntl.h>
 # include <sys/mman.h>
 # include <mach-o/loader.h>
+# include <mach-o/nlist.h>
 
 uint8_t		list_symbols(char *ptr);
 
