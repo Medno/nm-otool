@@ -21,6 +21,20 @@
 # include <mach-o/fat.h>
 # include <mach-o/ranlib.h>
 
+typedef struct	s_section
+{
+	char	name[16];
+	char	seg_name[16];
+}				t_section;
+
+typedef struct	s_symbols
+{
+	char		*file_name;
+	char		*header_ptr;
+	t_section	sections[255];
+	uint8_t		n_sections;
+}				t_symbols;
+
 uint8_t		list_symbols(char *ptr);
 uint8_t		handle_architecture(char *ptr);
 
