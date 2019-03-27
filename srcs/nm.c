@@ -46,7 +46,7 @@ uint8_t	handle_file(char *arg, uint8_t res)
 			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
 				error = handle_error(arg);
 			else
-				list_symbols(ptr);
+				handle_architecture(ptr);
 		}
 		if (close(fd) != 0)
 			error = handle_error(arg);
