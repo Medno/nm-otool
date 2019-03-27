@@ -4,3 +4,5 @@
 **/*.a
 **/libft/obj
 obj
+ft_nm
+ft_otool
