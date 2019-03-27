@@ -3,18 +3,20 @@
 void	display_sym_tab(char *ptr, struct load_command *lc)
 {
 	uint32_t				i;
-	char					*sym_tab;
+	char					*str_tab;
 	struct symtab_command	*sc;
 	struct nlist_64			*nlist;
 
 	sc = (struct symtab_command *)lc;
-	nlist = (void *)ptr + sc->symoff;
-	sym_tab = (void *)ptr + sc->stroff;
+	nlist = (struct nlist_64 *)(ptr + sc->symoff);
+	str_tab = (char *)(ptr + sc->stroff);
 
 	i = 0;
 	while (i < sc->nsyms)
 	{
-		ft_printf("%s\n", sym_tab + nlist[i].n_un.n_strx);
+		ft_printf("%016llx %s\n", nlist[i].n_value, str_tab
+		+ nlist[i].n_un.n_strx);
+//		ft_printf("%x %x\n", sc->symoff, sc->stroff);
 		i++;
 	}
 }
@@ -29,7 +31,7 @@ uint8_t	list_symbols(char *ptr)
 	macho_64 = (struct mach_header_64 *)ptr;
 	if (macho_64->magic == MH_MAGIC_64)
 		ft_printf("Je suis magic 64b\n");
-	lc = (void *)ptr + sizeof(*macho_64);
+	lc = (struct load_command*)(ptr + sizeof(*macho_64));
 	while (i < macho_64->ncmds)
 	{
 		if (lc->cmd == LC_SYMTAB)
