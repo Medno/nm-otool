@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/03/27 17:49:42 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/03/28 16:42:56 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,7 @@ typedef struct	s_symbols
 uint8_t		handle_architecture(char *arg, char *ptr);
 
 uint8_t		handle_error(char *path);
+
+void		print_struct_sym(t_symbols sym);
+
 #endif

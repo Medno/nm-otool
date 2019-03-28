@@ -150,6 +150,7 @@ uint8_t	handle_architecture(char *arg, char *ptr)
 	{
 		ft_printf("64bit MACH-O file, development in progress...\n");
 		int ret = list_symbols(&symbols);
+		print_struct_sym(symbols);
 		return (ret);
 	}
 	else if (magic == MH_MAGIC)
