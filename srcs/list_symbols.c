@@ -14,12 +14,12 @@
 
 char	find_segment_type(t_symbols *sym, struct nlist_64 list)
 {
-	if (ft_strequ(sym->sections[list.n_sect].seg_name, SEG_TEXT))
-		return ('T');
-	if (ft_strequ(sym->sections[list.n_sect].seg_name, SEG_DATA))
-		return ('D');
-	if (ft_strequ(sym->sections[list.n_sect].name, SECT_BSS))
-		return ('B');
+	if (ft_strequ(sym->sections[list.n_sect - 1].seg_name, SEG_TEXT))
+		return ('t');
+	if (ft_strequ(sym->sections[list.n_sect - 1].seg_name, SEG_DATA))
+		return ('d');
+	if (ft_strequ(sym->sections[list.n_sect - 1].name, SECT_BSS))
+		return ('b');
 	return ('?');
 }
 
@@ -30,21 +30,26 @@ char	find_n_type(t_symbols *sym, struct nlist_64 list)
 		if ((list.n_type & N_TYPE) == N_UNDF)
 		{
 			if (list.n_value != 0)
-				return ('C');
-			return ('U');
+				return ('c');
+			return ('u');
 		}
 		else if ((list.n_type & N_TYPE) == N_PBUD)
-			return ('U');
+			return ('u');
 		else if ((list.n_type & N_TYPE) == N_ABS)
-			return ('A');
+			return ('a');
 		else if ((list.n_type & N_TYPE) == N_SECT)
 		{
 			return (find_segment_type(sym, list));
 		}
 		else if ((list.n_type & N_TYPE) == N_INDR)
-			return ('I');
+			return ('i');
 	}
-	return ('U');
+	return ('u');
+}
+
+char	edit_if_ext(char type, uint8_t list_type)
+{
+	return (list_type & N_EXT ? ft_toupper(type) : type);
 }
 
 void	display_sym_tab(t_symbols *sym, struct load_command *lc)
@@ -62,6 +67,7 @@ void	display_sym_tab(t_symbols *sym, struct load_command *lc)
 	while (i < sc->nsyms)
 	{
 		type = find_n_type(sym, nlist[i]);
+		type = edit_if_ext(type, nlist[i].n_type);
 		if (nlist[i].n_value)
 			ft_printf("%016llx %c %s\n", nlist[i].n_value, type,
 					str_tab + nlist[i].n_un.n_strx);
