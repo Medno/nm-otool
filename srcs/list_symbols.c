@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/03/28 16:45:27 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/03/28 19:03:07 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,72 @@ char	edit_if_ext(char type, uint8_t list_type)
 	return (list_type & N_EXT ? ft_toupper(type) : type);
 }
 
+void	compare_values(struct nlist_64 *ar[], uint32_t f, uint32_t s, char *st)
+{
+	char			*f_str;
+	char			*s_str;
+	struct nlist_64	*tmp;
+
+	ft_printf("Start cmp\n");
+	f_str = st + ar[f]->n_un.n_strx;
+	s_str = st + ar[s]->n_un.n_strx;
+	if (ft_strcmp(f_str, s_str) > 0)
+	{
+		tmp = ar[f];
+		ar[f] = ar[s];
+		ar[s] = tmp;
+		ft_printf("SWAP\n");
+	}
+}
+
+void	fusion_sort(struct nlist_64 *ar[], uint32_t f, uint32_t s, char *st)
+{
+	uint32_t	tmp;
+	ft_printf("Start fusion, f = |%zu|, s = |%zu|\n", f, s);
+	if (s <= f)
+		return ;
+	else if (s - f == 1)
+	{
+		ft_printf("test\n");
+		compare_values(ar, f, s, st);
+	}
+	else
+	{
+	tmp = f + (s - f) / 2;
+		fusion_sort(ar, f, tmp, st);
+	ft_printf("Inside fusion, f = |%zu|, s = |%zu|\n", f, s);
+		fusion_sort(ar, tmp + 1, s, st);
+	}
+	ft_printf("End fusion, f = |%zu|, s = |%zu|\n", f, s);
+}
+
+void	get_all_syms(struct nlist_64 *list, uint32_t nsyms, char *str_tab)
+{
+	struct nlist_64	*new[nsyms];
+	uint32_t		i;
+
+	i = 0;
+	while (i < nsyms)
+	{
+		new[i] = &list[i];
+		if (list[i].n_value)
+		{
+			ft_printf("%x\n", new[i]);
+			ft_printf("%s\n", str_tab + new[i]->n_un.n_strx);
+		}
+		i++;
+	}
+	fusion_sort(new, 0, nsyms, str_tab);
+	i = 0;
+	while (i < nsyms)
+	{
+			ft_printf("%x\n", new[i]);
+			ft_printf("%s\n", str_tab + new[i]->n_un.n_strx);
+		i++;
+	}
+
+}
+
 void	display_sym_tab(t_symbols *sym, struct load_command *lc)
 {
 	uint32_t				i;
@@ -64,6 +130,8 @@ void	display_sym_tab(t_symbols *sym, struct load_command *lc)
 	sc = (struct symtab_command *)lc;
 	nlist = (struct nlist_64 *)(sym->header_ptr + sc->symoff);
 	str_tab = (char *)(sym->header_ptr + sc->stroff);
+
+	get_all_syms(nlist, sc->nsyms, str_tab);
 	while (i < sc->nsyms)
 	{
 		type = find_n_type(sym, nlist[i]);
