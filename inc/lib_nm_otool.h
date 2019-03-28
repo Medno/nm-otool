@@ -23,8 +23,9 @@
 
 typedef struct	s_section
 {
-	char	name[16];
-	char	seg_name[16];
+	char			*name;
+	char			*seg_name;
+	struct nlist_64	*ptr;
 }				t_section;
 
 typedef struct	s_symbols
@@ -32,11 +33,11 @@ typedef struct	s_symbols
 	char		*file_name;
 	char		*header_ptr;
 	t_section	sections[255];
-	uint8_t		n_sections;
+	uint8_t		n_cmds;
+	uint8_t		n_sects;
 }				t_symbols;
 
-uint8_t		list_symbols(char *ptr);
-uint8_t		handle_architecture(char *ptr);
+uint8_t		handle_architecture(char *arg, char *ptr);
 
 uint8_t		handle_error(char *path);
 #endif

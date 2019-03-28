@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:47 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/03/27 17:49:48 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/03/28 15:48:24 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ uint8_t	handle_file(char *arg, uint8_t res)
 			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
 				error = handle_error(arg);
 			else
-				handle_architecture(ptr);
+				handle_architecture(arg, ptr);
 		}
 		if (close(fd) != 0)
 			error = handle_error(arg);
