@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   lib_is.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/07 11:10:25 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/03/29 11:19:41 by pchadeni         ###   ########.fr       */
+/*   Created: 2019/03/29 10:56:01 by pchadeni          #+#    #+#             */
+/*   Updated: 2019/03/29 11:25:12 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#ifndef LIB_IS_H
+# define LIB_IS_H
 
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <sys/stat.h>
-# include <stdint.h>
-# include <stdlib.h>
-# include <string.h>
-# include <unistd.h>
+# include "libft.h"
 
-# include "ft_printf.h"
-# include "lib_color.h"
-# include "lib_is.h"
-# include "lib_lst.h"
-# include "lib_maths.h"
-# include "lib_mem.h"
-# include "lib_misc.h"
-# include "lib_put.h"
-# include "lib_str.h"
+typedef struct stat	t_stat;
+
+int		ft_isalnum(int c);
+int		ft_isalpha(int c);
+int		ft_isascii(int c);
+int		ft_isdigit(int c);
+int		ft_isprint(int c);
+
+uint8_t	ft_iswsp(char c);
+uint8_t	ft_isdir(t_stat sb);
+uint8_t	ft_isdot(char *path);
+uint8_t	ft_isexe(t_stat stat);
+uint8_t	ft_islink(t_stat stat);
 
 #endif

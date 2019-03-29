@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2018/06/26 14:47:07 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/03/29 11:21:56 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,8 +63,17 @@ FTPRINTF = ft_printf.c	\
 INCLUDES = ./inc/
 INC += -I$(INCLUDES)
 INC += -I $(LIB_PATH)
-HEAD = $(INCLUDES)/libft.h	\
-	   $(INCLUDES)/ft_printf.h
+HEAD = $(INCLUDES)/libft.h		\
+	   $(INCLUDES)/ft_printf.h	\
+	   $(INCLUDES)/lib_color.h	\
+	   $(INCLUDES)/lib_is.h		\
+	   $(INCLUDES)/lib_lst.h	\
+	   $(INCLUDES)/lib_maths.h	\
+	   $(INCLUDES)/lib_mem.h	\
+	   $(INCLUDES)/lib_misc.h	\
+	   $(INCLUDES)/lib_put.h	\
+	   $(INCLUDES)/lib_str.h
+
 
 #### FILES FROM LIB ####
 LIB_FILES = ft_atoi.c	\
