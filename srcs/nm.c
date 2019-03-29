@@ -6,13 +6,13 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:47 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/03/28 15:48:24 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/03/29 13:41:42 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-int	invalid_parameters(int ac, char **av)
+int		invalid_parameters(int ac, char **av)
 {
 	int	i;
 
@@ -35,15 +35,14 @@ uint8_t	handle_file(char *arg, uint8_t res)
 	error = 0;
 	if ((fd = open(arg, O_RDONLY)) < 0)
 		error = handle_error(arg);
-	else 
+	else
 	{
-		ft_printf("fd opened: |%d|\n", fd);
 		if (fstat(fd, &buf) != 0)
 			error = handle_error(arg);
 		else
 		{
-			ft_printf("Size of file: |%zu|\n", buf.st_size);
-			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
+			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+				== MAP_FAILED)
 				error = handle_error(arg);
 			else
 				handle_architecture(arg, ptr);
@@ -54,7 +53,7 @@ uint8_t	handle_file(char *arg, uint8_t res)
 	return (res == 1 || error == 1 ? 1 : 0);
 }
 
-int	nm(int ac, char **av)
+int		nm(int ac, char **av)
 {
 	uint8_t	ret;
 	int		i;
@@ -70,7 +69,7 @@ int	nm(int ac, char **av)
 	return (ret);
 }
 
-int	main(int ac, char **av)
+int		main(int ac, char **av)
 {
 	if (invalid_parameters(ac, av))
 		return (EXIT_FAILURE);

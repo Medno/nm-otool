@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/03/28 15:55:53 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/03/29 13:39:39 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,8 @@ NAME = $(NM) $(OTOOL)
 #------All sources------#
 
 MAIN_SRCS = nm.c			\
+			type.c			\
+			merge_sort.c	\
 			error.c			\
 			print.c			\
 			list_symbols.c	
