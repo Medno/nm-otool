@@ -6,13 +6,13 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 10:43:01 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/03/29 13:35:36 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/01 18:04:29 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-void	copy_array(t_n64 *ar[], t_n64 *tmp[], uint32_t sz, uint32_t off)
+void	copy_array(t_ulist ar[], t_ulist tmp[], uint32_t sz, uint32_t off)
 {
 	uint32_t	i;
 
@@ -24,7 +24,7 @@ void	copy_array(t_n64 *ar[], t_n64 *tmp[], uint32_t sz, uint32_t off)
 	}
 }
 
-void	concat_array(t_n64 *ar[], t_n64 *ar_l[], t_n64 *ar_r[], t_fus *fus)
+void	concat_array(t_ulist ar[], t_ulist ar_l[], t_ulist ar_r[], t_fus *fus)
 {
 	while (fus->i < fus->n1)
 	{
@@ -40,10 +40,10 @@ void	concat_array(t_n64 *ar[], t_n64 *ar_l[], t_n64 *ar_r[], t_fus *fus)
 	}
 }
 
-void	compare_nl(t_n64 *ar[], char *st, t_point_32 lm, t_fus fus)
+void	compare_nl(t_ulist ar[], char *st, t_point_32 lm, t_fus fus)
 {
-	t_n64	*ar_l[fus.n1];
-	t_n64	*ar_r[fus.n2];
+	t_ulist	ar_l[fus.n1];
+	t_ulist	ar_r[fus.n2];
 	char	*f_str;
 	char	*s_str;
 
@@ -51,8 +51,8 @@ void	compare_nl(t_n64 *ar[], char *st, t_point_32 lm, t_fus fus)
 	copy_array(ar, ar_r, fus.n2, lm.y + 1);
 	while (fus.i < fus.n1 && fus.j < fus.n2)
 	{
-		f_str = st + ar_l[fus.i]->n_un.n_strx;
-		s_str = st + ar_r[fus.j]->n_un.n_strx;
+		f_str = st + ar_l[fus.i].nl.n_un.n_strx;
+		s_str = st + ar_r[fus.j].nl.n_un.n_strx;
 		if (ft_strcmp(f_str, s_str) <= 0)
 		{
 			ar[fus.k] = ar_l[fus.i];
@@ -68,7 +68,7 @@ void	compare_nl(t_n64 *ar[], char *st, t_point_32 lm, t_fus fus)
 	concat_array(ar, ar_l, ar_r, &fus);
 }
 
-void	merge(t_n64 *arr[], char *st, t_point_32 lm, uint32_t r)
+void	merge(t_ulist arr[], char *st, t_point_32 lm, uint32_t r)
 {
 	t_fus	fus;
 
@@ -80,7 +80,7 @@ void	merge(t_n64 *arr[], char *st, t_point_32 lm, uint32_t r)
 	compare_nl(arr, st, lm, fus);
 }
 
-void	m_sort(t_n64 *arr[], char *st, uint32_t l, uint32_t r)
+void	m_sort(t_ulist arr[], char *st, uint32_t l, uint32_t r)
 {
 	t_point_32	lm;
 

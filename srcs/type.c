@@ -6,36 +6,36 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 13:35:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/03/29 13:38:16 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/01 19:10:59 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-char	find_n_type(t_symbols *sym, struct nlist_64 list)
+char	find_n_type(t_symbols *sym, uint8_t type, uint32_t value, uint8_t sect)
 {
-	if (list.n_type & N_TYPE)
+	ft_printf("%x\n", type & N_TYPE);
+	if (type & N_TYPE)
 	{
-		if ((list.n_type & N_TYPE) == N_UNDF
-				|| (list.n_type & N_TYPE) == N_PBUD)
+		if ((type & N_TYPE) == N_UNDF || (type & N_TYPE) == N_PBUD)
 		{
-			if ((list.n_type & N_TYPE) == N_UNDF && list.n_value != 0)
+			if ((type & N_TYPE) == N_UNDF && value != 0)
 				return ('c');
 			return ('u');
 		}
-		else if ((list.n_type & N_TYPE) == N_ABS)
+		else if ((type & N_TYPE) == N_ABS)
 			return ('a');
-		else if ((list.n_type & N_TYPE) == N_SECT)
+		else if ((type & N_TYPE) == N_SECT)
 		{
-			if (ft_strequ(sym->sections[list.n_sect - 1].seg_name, SEG_TEXT))
+			if (ft_strequ(sym->sections[sect - 1].seg_name, SEG_TEXT))
 				return ('t');
-			if (ft_strequ(sym->sections[list.n_sect - 1].seg_name, SEG_DATA))
+			if (ft_strequ(sym->sections[sect - 1].seg_name, SEG_DATA))
 				return ('d');
-			if (ft_strequ(sym->sections[list.n_sect - 1].name, SECT_BSS))
+			if (ft_strequ(sym->sections[sect - 1].name, SECT_BSS))
 				return ('b');
 			return ('?');
 		}
-		else if ((list.n_type & N_TYPE) == N_INDR)
+		else if ((type & N_TYPE) == N_INDR)
 			return ('i');
 	}
 	return ('u');
@@ -46,10 +46,10 @@ char	edit_if_ext(char type, uint8_t list_type)
 	return (list_type & N_EXT ? ft_toupper(type) : type);
 }
 
-char	find_symbol_type(t_symbols *sym, t_n64 list)
+char	find_symbol_type(t_symbols *sym, uint8_t t, uint32_t v, uint8_t s)
 {
 	char	type;
 
-	type = find_n_type(sym, list);
-	return (edit_if_ext(type, list.n_type));
+	type = find_n_type(sym, t, v, s);
+	return (edit_if_ext(type, type));
 }
