@@ -41,7 +41,7 @@ typedef struct	s_symbols
 	t_section	sections[255];
 	uint8_t		n_cmds;
 	uint8_t		n_sects;
-	uint8_t		n_syms;
+	uint32_t		n_syms;
 	t_lc		*lc;
 }				t_symbols;
 
