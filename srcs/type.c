@@ -14,7 +14,6 @@
 
 char	find_n_type(t_symbols *sym, uint8_t type, uint32_t value, uint8_t sect)
 {
-	ft_printf("%x\n", type & N_TYPE);
 	if (type & N_TYPE)
 	{
 		if ((type & N_TYPE) == N_UNDF || (type & N_TYPE) == N_PBUD)
@@ -29,11 +28,11 @@ char	find_n_type(t_symbols *sym, uint8_t type, uint32_t value, uint8_t sect)
 		{
 			if (ft_strequ(sym->sections[sect - 1].seg_name, SEG_TEXT))
 				return ('t');
-			if (ft_strequ(sym->sections[sect - 1].seg_name, SEG_DATA))
+			else if (ft_strequ(sym->sections[sect - 1].seg_name, SEG_DATA))
 				return ('d');
-			if (ft_strequ(sym->sections[sect - 1].name, SECT_BSS))
+			else if (ft_strequ(sym->sections[sect - 1].name, SECT_BSS))
 				return ('b');
-			return ('?');
+			return ('s');
 		}
 		else if ((type & N_TYPE) == N_INDR)
 			return ('i');
