@@ -20,7 +20,7 @@ void	print_struct_sym(t_symbols sym)
 ===========================================================\n");
 	ft_printf("=======================Print of struct=====================\n");
 	ft_printf("Filename : |%s|\n", sym.file_name);
-	ft_printf("Header_ptr : |%x|\n", sym.header_ptr);
+	ft_printf("Header : |%#x|\n", sym.magic);
 	ft_printf("Number of commands : |%zu|\n", sym.n_cmds);
 	ft_printf("Number of n_sections : |%zu|\n", sym.n_sects);
 	ft_printf("Number of n_syms : |%zu|\n", sym.n_syms);

@@ -18,26 +18,38 @@ void	handle_32(t_symbols *sym, t_sc *sc)
 	char		*str_tab;
 	t_n32		*nl_32;
 	uint32_t	i;
+	uint32_t	j;
 
 	i = 0;
+	j = 0;
 	ft_printf("Start handling 32 bits\n");
 	nl_32 = (t_n32 *)(sym->header_ptr + sc->symoff);
 	str_tab = (char *)(sym->header_ptr + sc->stroff);
 	while (i < sym->n_syms)
 	{
-		new[i].nl.n_un.n_strx = nl_32[i].n_un.n_strx;
-		new[i].nl.n_type = nl_32[i].n_type;
-		new[i].nl.n_sect = nl_32[i].n_sect;
-		new[i].nl.n_desc = nl_32[i].n_desc;
-		new[i].nl.n_value = nl_32[i].n_value;
-	ft_printf("Value of nstrx : |%08llx| |%s|\n", new[i].nl.n_value, str_tab + new[i].nl.n_un.n_strx);
-	ft_printf("Value of nstrx : |%08llx| |%s|\n", nl_32[i].n_value, str_tab + nl_32[i].n_un.n_strx);
+		if (!(nl_32[i].n_type & N_STAB)/*(str_tab + nl_32[i].n_un.n_strx)[0] */)
+		{
+			if (nl_32[i].n_value)
+				ft_printf("Value of nstrx : |%08x| |%s|\n", nl_32[i].n_value,
+				str_tab + nl_32[i].n_un.n_strx);
+			else
+				ft_printf("Value of nstrx : |%*s| |%s|\n", 8, "", str_tab + nl_32[i].n_un.n_strx);
+			new[j].nl.n_un.n_strx = nl_32[i].n_un.n_strx;
+			new[j].nl.n_type = nl_32[i].n_type;
+			new[j].nl.n_sect = nl_32[i].n_sect;
+			new[j].nl.n_desc = nl_32[i].n_desc;
+			new[j].nl.n_value = nl_32[i].n_value;
+			j++;
+		}
 		i++;
 	}
-	m_sort(new, str_tab, 0, sym->n_syms - 1);
-	print_symbols(sym, new, str_tab);
-}
 
+	ft_printf("Start sorting...\n");
+	m_sort(new, str_tab, 0, j - 1);
+	sym->n_syms = j;
+	print_symbols(sym, new, str_tab);
+
+}
 
 void	handle_64(t_symbols *sym, t_sc *sc)
 {
@@ -172,8 +184,7 @@ t_symbols	init_symbols_struct(char *arg, char *ptr)
 	symbols.n_syms = 0;
 	if (symbols.magic == MH_MAGIC)
 	{
-		symbols.lc = (t_lc *)(symbols.header_ptr
-				+ sizeof(struct mach_header));
+		symbols.lc = (t_lc *)((void *)symbols.header_ptr + sizeof(struct mach_header));
 		symbols.n_cmds = ((struct mach_header *)(symbols.header_ptr))->ncmds;
 	}
 	else
@@ -199,11 +210,10 @@ uint8_t	handle_architecture(char *arg, char *ptr)
 	}
 	else if (symbols.magic == MH_MAGIC)
 	{
-		ft_printf("32bit MACH-O file, I'm not treated yet\n");
+		ft_printf("32bit MACH-O file, development in progress...\n");
 		int ret = list_symbols(&symbols);
 		print_struct_sym(symbols);
 		return (ret);
-
 	}
 	else if (symbols.magic == FAT_MAGIC_64)
 		ft_printf("64bit FAT file, I'm not treated yet\n");
