@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/01 17:06:18 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/03 16:00:04 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ typedef struct nlist_64 t_n64;
 typedef struct nlist t_n32;
 typedef struct load_command t_lc;
 typedef struct symtab_command t_sc;
+typedef struct mach_header t_mh;
+typedef struct mach_header_64 t_mh64;
+typedef struct fat_header t_fh;
+typedef struct fat_arch t_fa;
+typedef struct fat_arch t_fa64;
 
 typedef struct	s_section
 {
@@ -68,5 +73,7 @@ char		find_symbol_type(t_symbols *sym, uint8_t t, uint32_t v, uint8_t s);
 void		print_struct_sym(t_symbols sym);
 void		m_sort(t_ulist ar[], char *st, uint32_t l, uint32_t r);
 void		print_symbols(t_symbols *sym, t_ulist new[], char *str_tab);
+
+uint32_t	convert_little_endian(uint32_t ptr);
 
 #endif

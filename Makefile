@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/03/29 13:39:39 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/04/03 14:58:37 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ MAIN_SRCS = nm.c			\
 			merge_sort.c	\
 			error.c			\
 			print.c			\
+			tools.c			\
 			list_symbols.c	
 
 OBJ += $(addprefix ./$(OBJ_PATH)/, $(MAIN_SRCS:.c=.o))
