@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/01 19:00:57 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/03 16:14:00 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,8 @@ void	handle_32(t_symbols *sym, t_sc *sc)
 	str_tab = (char *)(sym->header_ptr + sc->stroff);
 	while (i < sym->n_syms)
 	{
-		if (!(nl_32[i].n_type & N_STAB)/*(str_tab + nl_32[i].n_un.n_strx)[0] */)
+		if (!(nl_32[i].n_type & N_STAB))
 		{
-			if (nl_32[i].n_value)
-				ft_printf("Value of nstrx : |%08x| |%s|\n", nl_32[i].n_value,
-				str_tab + nl_32[i].n_un.n_strx);
-			else
-				ft_printf("Value of nstrx : |%*s| |%s|\n", 8, "", str_tab + nl_32[i].n_un.n_strx);
 			new[j].nl.n_un.n_strx = nl_32[i].n_un.n_strx;
 			new[j].nl.n_type = nl_32[i].n_type;
 			new[j].nl.n_sect = nl_32[i].n_sect;
@@ -48,7 +43,6 @@ void	handle_32(t_symbols *sym, t_sc *sc)
 	m_sort(new, str_tab, 0, j - 1);
 	sym->n_syms = j;
 	print_symbols(sym, new, str_tab);
-
 }
 
 void	handle_64(t_symbols *sym, t_sc *sc)
@@ -159,14 +153,8 @@ uint8_t	list_symbols(t_symbols *sym)
 	lc = sym->lc;
 	while (i < sym->n_cmds)
 	{
-		if (lc->cmd == LC_SEGMENT_64)
-		{
-		}
 		if (lc->cmd == LC_SYMTAB)
 			display_sym_tab(sym, lc);
-		if (lc->cmd == LC_DYSYMTAB)
-			ft_printf("DYSYMTAB\n");
-
 		lc = (void *)lc + lc->cmdsize;
 		i++;
 	}
@@ -175,7 +163,7 @@ uint8_t	list_symbols(t_symbols *sym)
 
 t_symbols	init_symbols_struct(char *arg, char *ptr)
 {
-	t_symbols symbols;
+	t_symbols	symbols;
 
 	symbols.magic = *(int *)ptr;
 	symbols.file_name = arg;
@@ -184,7 +172,8 @@ t_symbols	init_symbols_struct(char *arg, char *ptr)
 	symbols.n_syms = 0;
 	if (symbols.magic == MH_MAGIC)
 	{
-		symbols.lc = (t_lc *)((void *)symbols.header_ptr + sizeof(struct mach_header));
+		symbols.lc = (t_lc *)((void *)symbols.header_ptr
+				+ sizeof(struct mach_header));
 		symbols.n_cmds = ((struct mach_header *)(symbols.header_ptr))->ncmds;
 	}
 	else
@@ -196,37 +185,37 @@ t_symbols	init_symbols_struct(char *arg, char *ptr)
 	return (symbols);
 }
 
+uint8_t	handle_fat(char *ptr, uint32_t magic)
+{
+	if (magic == FAT_MAGIC)
+		ft_printf("32bits FAT file, I'm not treated yet\n");
+	else if (magic == FAT_MAGIC_64)
+		ft_printf("64bits FAT file, I'm not treated yet\n");
+	else if (magic == FAT_CIGAM)
+		ft_printf("32bits little endian file, development in progress...\n");
+	else if (magic == FAT_CIGAM_64)
+		ft_printf("64bits little endian file, I'm not treated yet\n");
+	return (0);
+}
+
 uint8_t	handle_architecture(char *arg, char *ptr)
 {
 	t_symbols	symbols;
-
 	uint32_t	magic;
 
 	magic = *(uint32_t *)ptr;
 	if (invalid_filetype(ptr, magic))
 		return (handle_error(arg));
+	if (magic == FAT_MAGIC || magic == FAT_MAGIC_64 || magic == FAT_CIGAM
+			|| magic == FAT_CIGAM_64)
+		return (handle_fat(ptr, magic));
 	symbols = init_symbols_struct(arg, ptr);
-	if (symbols.magic == MH_MAGIC_64)
+	if (symbols.magic == MH_MAGIC_64 || symbols.magic == MH_MAGIC)
 	{
-		ft_printf("64bit MACH-O file, development in progress...\n");
+		ft_printf("64bits or 32bits MACH-O file\n");
 		int ret = list_symbols(&symbols);
 		print_struct_sym(symbols);
 		return (ret);
 	}
-	else if (symbols.magic == MH_MAGIC)
-	{
-		ft_printf("32bit MACH-O file, development in progress...\n");
-		int ret = list_symbols(&symbols);
-		print_struct_sym(symbols);
-		return (ret);
-	}
-	else if (symbols.magic == FAT_MAGIC_64)
-		ft_printf("64bit FAT file, I'm not treated yet\n");
-	else if (symbols.magic == FAT_CIGAM)
-		ft_printf("32bit little endian file, I'm not treated yet\n");
-	else if (symbols.magic == FAT_CIGAM_64)
-		ft_printf("64bit little endian file, I'm not treated yet\n");
-	else if (symbols.magic == FAT_MAGIC)
-		ft_printf("32bit FAT file, I'm not treated yet\n");
 	return (0);
 }
