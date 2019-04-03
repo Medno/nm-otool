@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 16:14:00 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/03 16:23:55 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,43 +158,6 @@ uint8_t	list_symbols(t_symbols *sym)
 		lc = (void *)lc + lc->cmdsize;
 		i++;
 	}
-	return (0);
-}
-
-t_symbols	init_symbols_struct(char *arg, char *ptr)
-{
-	t_symbols	symbols;
-
-	symbols.magic = *(int *)ptr;
-	symbols.file_name = arg;
-	symbols.header_ptr = ptr;
-	symbols.n_sects = 0;
-	symbols.n_syms = 0;
-	if (symbols.magic == MH_MAGIC)
-	{
-		symbols.lc = (t_lc *)((void *)symbols.header_ptr
-				+ sizeof(struct mach_header));
-		symbols.n_cmds = ((struct mach_header *)(symbols.header_ptr))->ncmds;
-	}
-	else
-	{
-		symbols.lc = (t_lc *)(symbols.header_ptr
-				+ sizeof(struct mach_header_64));
-		symbols.n_cmds = ((struct mach_header_64 *)(symbols.header_ptr))->ncmds;
-	}
-	return (symbols);
-}
-
-uint8_t	handle_fat(char *ptr, uint32_t magic)
-{
-	if (magic == FAT_MAGIC)
-		ft_printf("32bits FAT file, I'm not treated yet\n");
-	else if (magic == FAT_MAGIC_64)
-		ft_printf("64bits FAT file, I'm not treated yet\n");
-	else if (magic == FAT_CIGAM)
-		ft_printf("32bits little endian file, development in progress...\n");
-	else if (magic == FAT_CIGAM_64)
-		ft_printf("64bits little endian file, I'm not treated yet\n");
 	return (0);
 }
 
