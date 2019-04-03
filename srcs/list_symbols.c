@@ -200,6 +200,11 @@ uint8_t	handle_architecture(char *arg, char *ptr)
 {
 	t_symbols	symbols;
 
+	uint32_t	magic;
+
+	magic = *(uint32_t *)ptr;
+	if (invalid_filetype(ptr, magic))
+		return (handle_error(arg));
 	symbols = init_symbols_struct(arg, ptr);
 	if (symbols.magic == MH_MAGIC_64)
 	{
