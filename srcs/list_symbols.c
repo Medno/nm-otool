@@ -190,5 +190,7 @@ uint8_t	handle_architecture(char *arg, char *ptr)
 		ft_printf("64bits or 32bits MACH-O file\n");
 		return (list_symbols(arg, ptr));
 	}
+	else
+		handle_archive(arg, ptr);
 	return (0);
 }

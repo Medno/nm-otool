@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 16:22:55 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/03 20:27:34 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <mach-o/nlist.h>
 # include <mach-o/fat.h>
 # include <mach-o/ranlib.h>
+# include <ar.h>
 
 typedef struct nlist_64 t_n64;
 typedef struct nlist t_n32;
@@ -77,6 +78,7 @@ void		m_sort(t_ulist ar[], char *st, uint32_t l, uint32_t r);
 void		print_symbols(t_symbols *sym, t_ulist new[], char *str_tab);
 
 uint8_t		handle_fat(char *arg, char *ptr, uint32_t magic);
+uint8_t		handle_archive(char *arg, char *ptr);
 
 uint32_t	convert_little_endian(uint32_t ptr);
 uint32_t	to_big_endian(uint8_t l_endian, uint32_t value);
