@@ -31,6 +31,20 @@ typedef struct fat_header t_fh;
 typedef struct fat_arch t_fa;
 typedef struct fat_arch t_fa64;
 
+typedef struct	s_sort_var
+{
+	uint32_t	i;
+	uint32_t	j;
+	uint32_t	k;
+	uint32_t	n1;
+	uint32_t	n2;
+}				t_fus;
+
+typedef struct	s_univ_nlist
+{
+	t_n64	nl;
+}				t_ulist;
+
 typedef struct	s_section
 {
 	char			*name;
@@ -46,25 +60,13 @@ typedef struct	s_symbols
 	t_section	sections[255];
 	uint8_t		n_cmds;
 	uint8_t		n_sects;
-	uint32_t		n_syms;
+	uint32_t	n_syms;
 	t_lc		*lc;
+	uint8_t		l_endian;
 }				t_symbols;
 
-typedef struct	s_univ_nlist
-{
-	t_n64	nl;
-}				t_ulist;
-
-typedef struct	s_sort_var
-{
-	uint32_t	i;
-	uint32_t	j;
-	uint32_t	k;
-	uint32_t	n1;
-	uint32_t	n2;
-}				t_fus;
-
 uint8_t		handle_architecture(char *arg, char *ptr);
+uint8_t		list_symbols(char *arg, void *ptr);
 
 uint8_t		handle_error(char *path);
 void		merge_sort(struct nlist_64 *ar[], uint32_t f, uint32_t l);
@@ -74,9 +76,10 @@ void		print_struct_sym(t_symbols sym);
 void		m_sort(t_ulist ar[], char *st, uint32_t l, uint32_t r);
 void		print_symbols(t_symbols *sym, t_ulist new[], char *str_tab);
 
-uint8_t		handle_fat(char *ptr, uint32_t magic);
+uint8_t		handle_fat(char *arg, char *ptr, uint32_t magic);
 
 uint32_t	convert_little_endian(uint32_t ptr);
+uint32_t	to_big_endian(uint8_t l_endian, uint32_t value);
 uint8_t		invalid_filetype(char *ptr, uint32_t magic);
 
 t_symbols	init_symbols_struct(char *arg, char *ptr);

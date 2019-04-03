@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:21:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 16:22:35 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/03 18:07:53 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,29 @@
 t_symbols	init_symbols_struct(char *arg, char *ptr)
 {
 	t_symbols	symbols;
+	uint32_t	magic;
 
-	symbols.magic = *(int *)ptr;
+	magic = *(int *)ptr;
+	symbols.magic = magic;
 	symbols.file_name = arg;
 	symbols.header_ptr = ptr;
 	symbols.n_sects = 0;
 	symbols.n_syms = 0;
-	if (symbols.magic == MH_MAGIC)
+	symbols.l_endian = magic == MH_MAGIC || magic == MH_MAGIC_64 ? 0 : 1;
+	if (magic == MH_MAGIC || magic == MH_CIGAM)
 	{
 		symbols.lc = (t_lc *)((void *)symbols.header_ptr
 				+ sizeof(struct mach_header));
-		symbols.n_cmds = ((struct mach_header *)(symbols.header_ptr))->ncmds;
+		symbols.n_cmds = to_big_endian(symbols.l_endian,
+				((t_mh *)(symbols.header_ptr))->ncmds);
 	}
 	else
 	{
 		symbols.lc = (t_lc *)(symbols.header_ptr
 				+ sizeof(struct mach_header_64));
-		symbols.n_cmds = ((struct mach_header_64 *)(symbols.header_ptr))->ncmds;
+		symbols.n_cmds = to_big_endian(symbols.l_endian,
+				((t_mh64 *)(symbols.header_ptr))->ncmds);
 	}
+	ft_printf("Magic number : |%#x|\n", magic);
 	return (symbols);
 }

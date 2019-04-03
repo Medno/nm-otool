@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/01 18:49:50 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/03 18:03:02 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	print_struct_sym(t_symbols sym)
 			i++;
 		}
 	}
+	ft_printf("===========================================================\n");
 }
 
 void	print_symbols(t_symbols *sym, t_ulist new[], char *str_tab)

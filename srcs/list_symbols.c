@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 16:23:55 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/03 19:45:07 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	display_sym_tab(t_symbols *sym, struct load_command *lc)
 	uint32_t	i;
 	t_sc		*sc;
 
+	ft_printf("Handling 32 / 64 bit mach o header\n");
 	i = 0;
 	sc = (t_sc *)lc;
 	sym->n_syms = sc->nsyms;
@@ -79,7 +80,7 @@ void	display_sym_tab(t_symbols *sym, struct load_command *lc)
 		handle_64(sym, sc);
 }
 
-void	add_sect_in_struct(t_symbols *sym, struct load_command *lc)
+void	add_sect_in_struct_64(t_symbols *sym, struct load_command *lc)
 {
 	struct segment_command_64	*sc;
 	struct section_64			*sect_64;
@@ -127,43 +128,55 @@ void	fill_struct(t_symbols *sym)
 {
 	struct load_command		*lc;
 	uint32_t				i;
+	uint32_t				lc_cmdsize;
 
+print_struct_sym(*sym);
 	i = 0;
 	lc = sym->lc;
 	ft_printf("Start filling structure...\n");
 	while (i < sym->n_cmds)
 	{
+		ft_printf("test\n");
+		lc_cmdsize = to_big_endian(sym->l_endian, lc->cmdsize);
+		ft_printf("Size of load command: |%zu|\n", lc_cmdsize);
 		if (lc->cmd == LC_SEGMENT_64)
-			add_sect_in_struct(sym, lc);
+			add_sect_in_struct_64(sym, lc);
 		else if (lc->cmd == LC_SEGMENT)
 			add_sect_in_struct_32(sym, lc);
-		lc = (void *)lc + lc->cmdsize;
+		ft_printf("test 1\n");
+		lc = (void *)lc + lc_cmdsize;
+		ft_printf("test 2\n");
 		i++;
 	}
+	ft_printf("end of filling\n");
 }
 
-uint8_t	list_symbols(t_symbols *sym)
+uint8_t	list_symbols(char *arg, void *ptr)
 {
 	struct load_command		*lc;
+	t_symbols				sym;
 	uint32_t				i;
+	uint32_t				lc_cmdsize;
 
 	i = 0;
+	sym = init_symbols_struct(arg, ptr);
 	ft_printf("Starting listing symbols...\n");
-	fill_struct(sym);
-	lc = sym->lc;
-	while (i < sym->n_cmds)
+	fill_struct(&sym);
+	lc = sym.lc;
+	while (i < sym.n_cmds)
 	{
+		lc_cmdsize = to_big_endian(sym.l_endian, lc->cmdsize);
 		if (lc->cmd == LC_SYMTAB)
-			display_sym_tab(sym, lc);
-		lc = (void *)lc + lc->cmdsize;
+			display_sym_tab(&sym, lc);
+		lc = (void *)lc + lc_cmdsize;
 		i++;
 	}
+print_struct_sym(sym);
 	return (0);
 }
 
 uint8_t	handle_architecture(char *arg, char *ptr)
 {
-	t_symbols	symbols;
 	uint32_t	magic;
 
 	magic = *(uint32_t *)ptr;
@@ -171,14 +184,11 @@ uint8_t	handle_architecture(char *arg, char *ptr)
 		return (handle_error(arg));
 	if (magic == FAT_MAGIC || magic == FAT_MAGIC_64 || magic == FAT_CIGAM
 			|| magic == FAT_CIGAM_64)
-		return (handle_fat(ptr, magic));
-	symbols = init_symbols_struct(arg, ptr);
-	if (symbols.magic == MH_MAGIC_64 || symbols.magic == MH_MAGIC)
+		return (handle_fat(arg, ptr, magic));
+	if (magic == MH_MAGIC_64 || magic == MH_MAGIC)
 	{
 		ft_printf("64bits or 32bits MACH-O file\n");
-		int ret = list_symbols(&symbols);
-		print_struct_sym(symbols);
-		return (ret);
+		return (list_symbols(arg, ptr));
 	}
 	return (0);
 }

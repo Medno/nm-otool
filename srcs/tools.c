@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 14:55:30 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 15:11:17 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/03 17:50:49 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,4 +18,11 @@ uint32_t	convert_little_endian(uint32_t ptr)
 		+ ((unsigned)ptr >> 8 << 24 >> 8)
 		+ ((unsigned)ptr >> 16 << 24 >> 16)
 		+ ((unsigned)ptr >> 24 << 24 >> 24));
+}
+
+uint32_t	to_big_endian(uint8_t l_endian, uint32_t value)
+{
+	if (l_endian)
+		return (convert_little_endian(value));
+	return (value);
 }
