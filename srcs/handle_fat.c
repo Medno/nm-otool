@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:18:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 17:50:06 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/04 17:11:45 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ uint8_t	handle_fat_32(char *arg, char *ptr, uint8_t l_endian)
 
 	fh = (t_fh *)ptr;
 	n_fa = to_big_endian(l_endian, fh->nfat_arch);
-//	n_fa = l_endian ? convert_little_endian(fh->nfat_arch) : fh->nfat_arch;
 	ft_printf("Number of arch : |%zu|\n", n_fa);
 	fa = (t_fa *)(ptr + sizeof(t_fh));
 	while (n_fa)
@@ -58,7 +57,12 @@ uint8_t	handle_fat_32(char *arg, char *ptr, uint8_t l_endian)
 		cpu_type = cpu_name(to_big_endian(l_endian, fa->cputype));
 		ft_printf("\n%s (for architecture %s):\n", arg, cpu_type);
 		free(cpu_type);
-		list_symbols(arg, ptr + to_big_endian(l_endian, fa->offset));
+		if (invalid_filetype(ptr + to_big_endian(l_endian, fa->offset)))
+			return (1);
+		if (is_archive(ptr + to_big_endian(l_endian, fa->offset)))
+			handle_archive(arg, ptr + to_big_endian(l_endian, fa->offset));
+		else
+			list_symbols(arg, ptr + to_big_endian(l_endian, fa->offset));
 		fa = (void *)fa + sizeof(t_fa);
 		n_fa--;
 	}
@@ -67,8 +71,10 @@ uint8_t	handle_fat_32(char *arg, char *ptr, uint8_t l_endian)
 
 uint8_t	handle_fat(char *arg, char *ptr, uint32_t magic)
 {
-	uint8_t		little_endian;
+	uint8_t	little_endian;
+	uint8_t	res;
 
+	res = 1;
 	little_endian = magic == FAT_MAGIC || magic == FAT_MAGIC_64 ? 0 : 1;
 	if (magic == FAT_MAGIC)
 		ft_printf("32bits FAT file, I'm not treated yet\n");
@@ -78,8 +84,7 @@ uint8_t	handle_fat(char *arg, char *ptr, uint32_t magic)
 		ft_printf("32bits little endian file, development in progress...\n");
 	else if (magic == FAT_CIGAM_64)
 		ft_printf("64bits little endian file, I'm not treated yet\n");
-
 	if (magic == FAT_MAGIC || magic == FAT_CIGAM)
-		handle_fat_32(arg, ptr, little_endian);
-	return (0);
+		res = handle_fat_32(arg, ptr, little_endian);
+	return (res);
 }

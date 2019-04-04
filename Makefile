@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/04/03 19:48:40 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/04/04 17:06:12 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ NAME = $(NM) $(OTOOL)
 MAIN_SRCS = nm.c					\
 			type.c					\
 			merge_sort.c			\
+			merge_sort_uint.c		\
 			error.c					\
 			print.c					\
 			tools.c					\

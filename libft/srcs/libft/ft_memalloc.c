@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/08 16:39:25 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/01/17 17:07:15 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/04 17:10:51 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 
 void	*ft_memalloc_uint(size_t size)
 {
-	uint8_t	*tmp;
-	size_t	i;
+	uint32_t	*tmp;
+	size_t		i;
 
 	i = 0;
 	if (!size)
 		return (NULL);
-	if (!(tmp = (uint8_t *)malloc(size)))
+	if (!(tmp = (uint32_t *)malloc(size)))
 		return (NULL);
 	while (i < size)
 		tmp[i++] = 0;

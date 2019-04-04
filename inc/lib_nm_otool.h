@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 20:27:34 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/04 17:21:03 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ char			find_sym_type(t_symbols *sy, uint8_t t, uint32_t v, uint8_t s);
 
 void			print_struct_sym(t_symbols sym);
 void			m_sort(t_ulist ar[], char *st, uint32_t l, uint32_t r);
+void			m_sort_uint(uint32_t *ar, uint32_t l, uint32_t r);
 void			print_symbols(t_symbols *sym, t_ulist new[], char *str_tab);
 
 uint8_t			handle_fat(char *arg, char *ptr, uint32_t magic);
