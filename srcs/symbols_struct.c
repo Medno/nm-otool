@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:21:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 18:07:53 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/04 16:42:14 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,5 @@ t_symbols	init_symbols_struct(char *arg, char *ptr)
 		symbols.n_cmds = to_big_endian(symbols.l_endian,
 				((t_mh64 *)(symbols.header_ptr))->ncmds);
 	}
-	ft_printf("Magic number : |%#x|\n", magic);
 	return (symbols);
 }

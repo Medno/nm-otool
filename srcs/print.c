@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 18:03:02 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/04 17:19:19 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,13 @@ void	print_symbols(t_symbols *sym, t_ulist new[], char *str_tab)
 
 	i = 0;
 	padding = sym->magic == MH_MAGIC || sym->magic == MH_CIGAM
-		? 8 : 16 ;
+		? 8 : 16;
 	while (i < sym->n_syms)
 	{
-		type = find_symbol_type(sym, new[i].nl.n_type, new[i].nl.n_value,
+		type = find_sym_type(sym, new[i].nl.n_type, new[i].nl.n_value,
 				new[i].nl.n_sect);
-		if (new[i].nl.n_value)
+		if (new[i].nl.n_value
+				|| (new[i].nl.n_value == 0 && type == 'T'))
 			ft_printf("%0*llx %c %s\n", padding, new[i].nl.n_value, type,
 					str_tab + new[i].nl.n_un.n_strx);
 		else
@@ -58,5 +59,4 @@ void	print_symbols(t_symbols *sym, t_ulist new[], char *str_tab)
 					str_tab + new[i].nl.n_un.n_strx);
 		i++;
 	}
-
 }

@@ -18,15 +18,16 @@ NAME = $(NM) $(OTOOL)
 
 #------All sources------#
 
-MAIN_SRCS = nm.c			\
-			type.c			\
-			merge_sort.c	\
-			error.c			\
-			print.c			\
-			tools.c			\
-			symbols_struct.c	\
-			handle_fat.c	\
-			handle_archive.c	\
+MAIN_SRCS = nm.c					\
+			type.c					\
+			merge_sort.c			\
+			error.c					\
+			print.c					\
+			tools.c					\
+			symbols_struct.c		\
+			handle_fat.c			\
+			handle_archive.c		\
+			handle_macho_struct.c	\
 			list_symbols.c	
 
 OBJ += $(addprefix ./$(OBJ_PATH)/, $(MAIN_SRCS:.c=.o))
