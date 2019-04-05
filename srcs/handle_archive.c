@@ -80,7 +80,7 @@ uint8_t			handle_archive(char *arg, char *ptr)
 	if (!(array_offset = create_array_offset(ptr, &i)))
 		return (1);
 	m_sort_uint(array_offset, 0, i - 1);
-	list_foreach_objects(arg, ptr, array_offset, i - 1);
+	foreach_objects(arg, ptr, array_offset, i - 1);
 	free(array_offset);
 	return (0);
 }
