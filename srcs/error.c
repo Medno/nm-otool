@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:28 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/04 16:40:56 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/05 11:44:00 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,5 @@ uint8_t	invalid_filetype(char *ptr)
 	uint32_t	magic;
 
 	magic = *(int *)ptr;
-	ft_printf("Magic number : |%#x|\n", magic);
 	return (!is_macho(magic) && !is_fat(magic) && !is_archive(ptr));
 }

@@ -60,6 +60,8 @@ int		nm(int ac, char **av)
 
 	i = 1;
 	ret = 0;
+	if (ac == 1)
+		ret = handle_file("a.out", ret);
 	while (i < ac)
 	{
 		if (av[i][0] != '-')

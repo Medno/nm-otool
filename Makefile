@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/04/04 17:06:12 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/04/05 13:55:22 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ LIB_PATH  = libft
 
 #------Main rules------#
 
-all: $(OBJ_PATH) $(LIB) $(NAME)
+all: $(OBJ_PATH) makelib $(NAME)
 
 $(NAME): $(LIB) $(OBJ)
 	@printf "\33[2KObjects created $(BOLD_GREEN)✓$(EOC)\n"
@@ -67,7 +67,7 @@ $(OBJ_PATH)/%.o: $(SRCS_PATH)/%.c $(HEAD)
 	@$(CC) $(FLAGS) $(C_FLAGS) $(INC) -o $@ -c $<
 	@printf " $(COL_GREEN)[OK]$(EOC) $(COL_YELLOW)Compiling:$(EOC) $<\r"
 
-$(LIB):
+makelib:
 	@make -C $(LIB_PATH) NOERR=$(NOERR) DEV=$(DEV) SAN=$(SAN)
 
 clean: cleanlib
