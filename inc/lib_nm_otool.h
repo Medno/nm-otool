@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/04 17:21:03 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/05 17:27:26 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <mach-o/nlist.h>
 # include <mach-o/fat.h>
 # include <mach-o/ranlib.h>
+# include <mach-o/arch.h>
 # include <ar.h>
 
 typedef struct nlist_64	t_n64;
