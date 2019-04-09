@@ -6,19 +6,17 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:47 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/03 15:00:26 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 15:28:43 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-int	handle_opts(char *str, uint8_t *opts)
+int		handle_opts(char *str, uint8_t *opts, size_t size, char *files[])
 {
 	size_t	i;
-	size_t	size;
 
 	i = 1;
-	size = ft_strlen(str);
 	while (i < size)
 	{
 		if (str[i] == 'a' && !(*opts & OPT_A))
@@ -34,13 +32,16 @@ int	handle_opts(char *str, uint8_t *opts)
 		else if (str[i] == 'u' && !(*opts & OPT_U))
 			*opts = *opts ^ OPT_U;
 		else
+		{
+			files[0] = str;
 			return (1);
+		}
 		i++;
 	}
 	return (0);
 }
 
-int	invalid_parameters(int ac, char **av, uint8_t *opts, char *files[])
+int		invalid_parameters(int ac, char **av, uint8_t *opts, char *files[])
 {
 	int		i;
 	int		nb_files;
@@ -55,11 +56,8 @@ int	invalid_parameters(int ac, char **av, uint8_t *opts, char *files[])
 		{
 			if (ft_strequ("--", av[i]))
 				end_of_opts = 1;
-			else if (handle_opts(av[i], opts))
-			{
-				files[0] = av[i];
+			else if (handle_opts(av[i], opts, ft_strlen(av[i]), files))
 				return (-1);
-			}
 		}
 		else
 		{
@@ -71,7 +69,7 @@ int	invalid_parameters(int ac, char **av, uint8_t *opts, char *files[])
 	return (nb_files);
 }
 
-uint8_t	handle_file(char *arg, uint8_t res)
+uint8_t	handle_file(char *arg, uint8_t res, uint8_t opts)
 {
 	int			fd;
 	char		*ptr;
@@ -91,7 +89,7 @@ uint8_t	handle_file(char *arg, uint8_t res)
 					== MAP_FAILED)
 				error = handle_error(arg, E_UNDIF_FILE);
 			else
-				error = handle_architecture(arg, ptr);
+				error = handle_architecture(arg, ptr, buf.st_size, opts);
 		}
 		if (close(fd) != 0)
 			error = handle_error(arg, E_UNDIF_FILE);
@@ -106,12 +104,11 @@ int		nm(char *files[], int n_files, uint8_t opts)
 
 	i = 0;
 	ret = 0;
-	(void) opts;
 	if (!n_files)
-		ret = handle_file("a.out", ret);
+		ret = handle_file("a.out", ret, opts);
 	while (i < n_files)
 	{
-		ret = handle_file(files[i], ret);
+		ret = handle_file(files[i], ret, opts);
 		i++;
 	}
 	return (ret);

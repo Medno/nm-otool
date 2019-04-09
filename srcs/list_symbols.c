@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/04 17:07:47 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 15:29:30 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,18 @@ uint8_t	list_symbols(char *arg, void *ptr)
 	return (0);
 }
 
-uint8_t	handle_architecture(char *arg, char *ptr)
+uint8_t	handle_architecture(char *arg, char *ptr, int size, uint8_t opts)
 {
+	t_finfo		file;
 	uint32_t	magic;
 
 	magic = *(uint32_t *)ptr;
-	/*
-	if (ptr + sizeof(struct mach_header) > file.size)
+	file.name = arg;
+	file.size = size;
+	file.opts = opts;
+	ft_printf("Size of file : %d\n", size);
+	if (ptr + sizeof(struct mach_header) > ptr + file.size)
 		return (1);
-	*/
 	if (invalid_filetype(ptr))
 		return (handle_error(arg, E_UNDIF_FILE));
 	if (is_fat(magic))

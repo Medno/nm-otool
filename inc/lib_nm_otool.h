@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/05 17:27:26 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 15:29:09 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct	s_finfo
 {
 	char	*name;
 	int		size;
+	uint8_t	opts;
 }				t_finfo;
 
 enum			e_opts
@@ -90,7 +91,7 @@ enum			e_error
 };
 
 
-uint8_t			handle_architecture(char *arg, char *ptr);
+uint8_t			handle_architecture(char *arg, char *ptr, int s, uint8_t opts);
 uint8_t			list_symbols(char *arg, void *ptr);
 
 uint8_t			handle_error(char *path, uint8_t error);
