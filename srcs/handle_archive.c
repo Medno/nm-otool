@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 19:45:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/09 18:38:04 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 19:11:20 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,8 @@ static uint8_t	for_obj(t_finfo f, t_fhead *head, uint32_t *arr, uint32_t s)
 	while (i < s)
 	{
 		ah = (struct ar_hdr *)(ptr + arr[i]);
-		if (ptr + arr[i] > ptr + ft_atoi(ah->ar_size))
+		if (ptr + arr[i] > ptr + f.size)
 			return (1);
-		ah = (struct ar_hdr *)(ptr + arr[i]);
 		object_header = find_correct_size(ah);
 //		fullpath = ft_strjoin(arg, (void *)ah + sizeof(*ah));
 //		ft_printf("\n%s(%s):\n", arg, (void *)ah + sizeof(*ah));

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/09 18:42:23 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 19:14:48 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char			find_sym_type(t_symbols *sy, uint8_t t, uint32_t v, uint8_t s);
 void			print_struct_sym(t_symbols sym);
 void			m_sort(t_ulist ar[], char *st, uint32_t l, uint32_t r);
 void			m_sort_uint(uint32_t *ar, uint32_t l, uint32_t r);
-void			print_symbols(t_symbols *sym, t_ulist new[], char *str_tab);
+void			print_symbols(t_finfo f, t_fhead *h, t_ulist n[], char *s_tab);
 
 uint8_t			handle_fat(t_finfo file, t_fhead *head, uint32_t magic);
 uint8_t			handle_archive(t_finfo gile, t_fhead *head);
@@ -125,8 +125,8 @@ uint8_t			is_archive(char *ptr);
 
 t_symbols		init_symbols_struct(char *name, void *ptr);
 
-void			handle_32(t_fhead *head, t_sc *sc);
-void			handle_64(t_fhead *head, t_sc *sc);
+void			handle_32(t_finfo file, t_fhead *head, t_sc *sc);
+void			handle_64(t_finfo file, t_fhead *head, t_sc *sc);
 void			add_sect_in_struct_64(t_symbols *sym, t_lc *lc);
 void			add_sect_in_struct_32(t_symbols *sym, t_lc *lc);
 

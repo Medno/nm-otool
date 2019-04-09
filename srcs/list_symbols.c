@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/09 18:47:38 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 19:19:29 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	display_sym_tab(t_finfo file, t_fhead *head, t_lc *lc)
 	sc = (t_sc *)lc;
 	head->macho.n_syms = sc->nsyms;
 	if (head->macho.magic == MH_MAGIC)
-		handle_32(head, sc);
+		handle_32(file, head, sc);
 	else if (head->macho.magic == MH_MAGIC_64)
-		handle_64(head, sc);
+		handle_64(file, head, sc);
 }
 
 uint8_t	fill_struct(t_symbols *sym)

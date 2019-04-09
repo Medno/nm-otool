@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/09 17:59:49 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 19:20:07 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,20 @@ void	print_struct_sym(t_symbols sym)
 	ft_printf("===========================================================\n");
 }
 
-void	print_symbols(t_symbols *sym, t_ulist new[], char *str_tab)
+void	print_symbols(t_finfo f, t_fhead *head, t_ulist new[], char *str_tab)
 {
 	uint32_t	i;
 	char		type;
 	uint8_t		padding;
 
 	i = 0;
-	padding = sym->magic == MH_MAGIC || sym->magic == MH_CIGAM
+	padding = head->macho.magic == MH_MAGIC || head->macho.magic == MH_CIGAM
 		? 8 : 16;
-	while (i < sym->n_syms)
+	if (head->archive)
+		ft_printf("\n%s(%s)\n", f.name, head->macho.obj_name);
+	while (i < head->macho.n_syms)
 	{
-		type = find_sym_type(sym, new[i].nl.n_type, new[i].nl.n_value,
+		type = find_sym_type(&head->macho, new[i].nl.n_type, new[i].nl.n_value,
 				new[i].nl.n_sect);
 		if (new[i].nl.n_value
 				|| (new[i].nl.n_value == 0 && type == 'T'))
