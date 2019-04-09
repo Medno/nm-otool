@@ -41,7 +41,6 @@ static uint8_t	foreach_objects(char *arg, char *ptr, uint32_t *arr, uint32_t s)
 			+ ft_atoi(ah->ar_name + ft_strlen(AR_EFMT1));
 		fullpath = ft_strjoin(arg, (void *)ah + sizeof(*ah));
 		ft_printf("\n%s(%s):\n", arg, (void *)ah + sizeof(*ah));
-
 		list_symbols(fullpath, object_header);
 		free(fullpath);
 		i++;

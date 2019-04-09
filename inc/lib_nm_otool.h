@@ -67,10 +67,33 @@ typedef struct	s_symbols
 	uint8_t		l_endian;
 }				t_symbols;
 
+typedef struct	s_finfo
+{
+	char	*name;
+	int		size;
+}				t_finfo;
+
+enum			e_opts
+{
+	OPT_A = (1 << 0),
+	OPT_G = (1 << 1),
+	OPT_N = (1 << 2),
+	OPT_P = (1 << 3),
+	OPT_R = (1 << 4),
+	OPT_U = (1 << 5),
+};
+
+enum			e_error
+{
+	E_UNDIF_FILE,
+	E_UNDIF_OPT
+};
+
+
 uint8_t			handle_architecture(char *arg, char *ptr);
 uint8_t			list_symbols(char *arg, void *ptr);
 
-uint8_t			handle_error(char *path);
+uint8_t			handle_error(char *path, uint8_t error);
 void			merge_sort(struct nlist_64 *ar[], uint32_t f, uint32_t l);
 char			find_sym_type(t_symbols *sy, uint8_t t, uint32_t v, uint8_t s);
 

@@ -18,8 +18,11 @@ NAME = $(NM) $(OTOOL)
 
 #------All sources------#
 
-MAIN_SRCS = nm.c					\
-			type.c					\
+NM_MAIN = nm.c
+
+OTOOL_MAIN = otool.c
+
+MAIN_SRCS = type.c					\
 			merge_sort.c			\
 			merge_sort_uint.c		\
 			error.c					\
@@ -32,6 +35,9 @@ MAIN_SRCS = nm.c					\
 			list_symbols.c	
 
 OBJ += $(addprefix ./$(OBJ_PATH)/, $(MAIN_SRCS:.c=.o))
+OBJ_NM += $(addprefix ./$(OBJ_PATH)/, $(NM_MAIN:.c=.o))
+OBJ_OTOOL += $(addprefix ./$(OBJ_PATH)/, $(OTOOL_MAIN:.c=.o))
+
 
 #------Includes------#
 
@@ -52,12 +58,12 @@ LIB_PATH  = libft
 
 all: $(OBJ_PATH) makelib $(NAME)
 
-$(NAME): $(LIB) $(OBJ)
+$(NAME): $(LIB) $(OBJ) $(OBJ_NM) $(OBJ_OTOOL)
 	@printf "\33[2KObjects created $(BOLD_GREEN)✓$(EOC)\n"
-	@printf "Start making $(NAME)... "
-	@$(CC) $(C_FLAGS) $(FLAGS) $(INC) -o $(NM) $^ $(LIB)
-	@$(CC) $(C_FLAGS) $(FLAGS) $(INC) -o $(OTOOL) $^ $(LIB)
-	@printf "$(BOLD_GREEN)$(NAME)$(EOC) created $(BOLD_GREEN)✓$(EOC)\n"
+	@printf "Start making $(NAME)...\n"
+	@$(CC) $(C_FLAGS) $(FLAGS) $(INC) -o $(NM) $(OBJ) $(OBJ_NM) $(LIB)
+	@$(CC) $(C_FLAGS) $(FLAGS) $(INC) -o $(OTOOL) $(OBJ) $(OBJ_OTOOL) $(LIB)
+	@printf "$(BOLD_GREEN)⤖     $(NAME)$(EOC) created $(BOLD_GREEN)✓$(EOC)\n"
 
 $(OBJ_PATH):
 	@mkdir -p $(OBJ_PATH)
