@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:18:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/05 18:05:43 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 18:36:03 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,12 @@ char	*cpu_name(cpu_type_t ct)
 	return (ft_strdup("ppc64"));
 }
 
-uint8_t	contain_architecture(const NXArchInfo *arch, t_fa *fa, uint32_t n_fa, uint8_t l_endian)
+uint8_t	contain_arch(t_finfo file, t_fa *fa, uint32_t n_fa, uint8_t l_endian)
 {
 	while (n_fa)
 	{
-		if (arch->cputype == (cpu_type_t)to_big_endian(l_endian, fa->cputype))
+		if (file.arch->cputype
+				== (cpu_type_t)to_big_endian(l_endian, fa->cputype))
 			return (1);
 		fa = (void *)fa + sizeof(t_fa);
 		n_fa--;
@@ -53,54 +54,61 @@ uint8_t	contain_architecture(const NXArchInfo *arch, t_fa *fa, uint32_t n_fa, ui
 	return (0);
 }
 
-uint8_t	handle_fat_arch(char *arg, char *ptr, t_fa *fa, uint8_t l_endian)
+uint8_t	handle_fat_arch(t_finfo file, t_fhead *head, t_fa *fa, uint8_t l_end)
 {
 	uint8_t	res;
 
-	if (invalid_filetype(ptr + to_big_endian(l_endian, fa->offset)))
+	if (invalid_filetype(head->ptr + to_big_endian(l_end, fa->offset)))
 		return (1);
-	if (is_archive(ptr + to_big_endian(l_endian, fa->offset)))
-		res = handle_archive(arg, ptr + to_big_endian(l_endian, fa->offset));
+	head->current = head->ptr + to_big_endian(l_end, fa->offset);
+	if (is_archive(head->ptr + to_big_endian(l_end, fa->offset)))
+		res = handle_archive(file, head);
 	else
-		res = list_symbols(arg, ptr + to_big_endian(l_endian, fa->offset));
+		res = list_symbols(file, head, file.name);
 	return (res);
 }
 
-uint8_t	handle_fat_32(char *arg, char *ptr, uint8_t l_endian, const NXArchInfo *arch)
+uint8_t	handle_fat_32(t_finfo file, t_fhead *head, uint8_t l_endian)
 {
 	uint32_t	n_fa;
 	t_fh		*fh;
 	t_fa		*fa;
 	uint8_t		res;
-	char		*cpu_type;
+//	char		*cpu_type;
 
-	fh = (t_fh *)ptr;
+	fh = (t_fh *)head->ptr;
 	n_fa = to_big_endian(l_endian, fh->nfat_arch);
-	fa = (t_fa *)(ptr + sizeof(t_fh));
-	if (contain_architecture(arch, fa, n_fa, l_endian))
-		return (handle_fat_arch(arg, ptr, fa, l_endian));
+	if (head->ptr + sizeof(*fh) + (sizeof(t_fa) * n_fa)
+			> head->ptr + file.size)
+		return (1);
+	fa = (t_fa *)(head->ptr + sizeof(t_fh));
+	if (contain_arch(file, fa, n_fa, l_endian))
+		return (handle_fat_arch(file, head, fa, l_endian));
 	while (n_fa)
 	{
-		cpu_type = cpu_name(to_big_endian(l_endian, fa->cputype));
-		ft_printf("\n%s (for architecture %s):\n", arg, cpu_type);
-		free(cpu_type);
-		res = handle_fat_arch(arg, ptr, fa, l_endian);
+		if ((char *)fa + fa->size > head->ptr + file.size)
+			return (1);
+//		cpu_type = cpu_name(to_big_endian(l_endian, fa->cputype));
+//		ft_printf("\n%s (for architecture %s):\n", arg, cpu_type);
+//		free(cpu_type);
+		res = handle_fat_arch(file, head, fa, l_endian);
 		fa = (void *)fa + sizeof(t_fa);
 		n_fa--;
 	}
 	return (0);
 }
 
-uint8_t	handle_fat(char *arg, char *ptr, uint32_t magic)
+uint8_t	handle_fat(t_finfo file, t_fhead *head, uint32_t magic)
 {
-	uint8_t				little_endian;
-	uint8_t				res;
-	const NXArchInfo	*arch;
+	uint8_t	little_endian;
+	uint8_t	res;
 
-	arch = NXGetLocalArchInfo();
 	res = 1;
+	if (head->ptr + sizeof(struct fat_header) > head->ptr + file.size)
+		return (1);
+	head->fat = 1;
 	little_endian = magic != FAT_MAGIC && magic != FAT_MAGIC_64;
 	if (magic == FAT_MAGIC || magic == FAT_CIGAM)
-		res = handle_fat_32(arg, ptr, little_endian, arch);
+		res = handle_fat_32(file, head, little_endian);
 	return (res);
 }

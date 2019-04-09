@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/04 17:19:19 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 17:59:49 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	print_struct_sym(t_symbols sym)
 	ft_printf("===========================================================\n\
 ===========================================================\n");
 	ft_printf("=======================Print of struct=====================\n");
-	ft_printf("Filename : |%s|\n", sym.file_name);
 	ft_printf("Header : |%#x|\n", sym.magic);
 	ft_printf("Number of commands : |%zu|\n", sym.n_cmds);
 	ft_printf("Number of n_sections : |%zu|\n", sym.n_sects);

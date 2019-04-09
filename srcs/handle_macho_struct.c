@@ -6,24 +6,24 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 17:05:35 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/04 17:07:04 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/09 18:44:27 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-void	handle_32(t_symbols *sym, t_sc *sc)
+void	handle_32(t_fhead *head, t_sc *sc)
 {
-	t_ulist		new[sym->n_syms];
+	t_ulist		new[head->macho.n_syms];
 	char		*str_tab;
 	t_n32		*nl_32;
 	t_point_32	ij;
 
 	ij.x = 0;
 	ij.y = 0;
-	nl_32 = (t_n32 *)(sym->header_ptr + sc->symoff);
-	str_tab = (char *)(sym->header_ptr + sc->stroff);
-	while (ij.x < sym->n_syms)
+	nl_32 = (t_n32 *)(head->ptr + sc->symoff);
+	str_tab = (char *)(head->ptr + sc->stroff);
+	while (ij.x < head->macho.n_syms)
 	{
 		if (!(nl_32[ij.x].n_type & N_STAB))
 		{
@@ -37,27 +37,27 @@ void	handle_32(t_symbols *sym, t_sc *sc)
 		ij.x++;
 	}
 	m_sort(new, str_tab, 0, ij.y - 1);
-	sym->n_syms = ij.y;
-	print_symbols(sym, new, str_tab);
+	head->macho.n_syms = ij.y;
+	print_symbols(&head->macho, new, str_tab);
 }
 
-void	handle_64(t_symbols *sym, t_sc *sc)
+void	handle_64(t_fhead *head, t_sc *sc)
 {
-	t_ulist		new[sym->n_syms];
+	t_ulist		new[head->macho.n_syms];
 	char		*str_tab;
 	t_n64		*nl_64;
 	uint32_t	i;
 
 	i = 0;
-	nl_64 = (t_n64 *)(sym->header_ptr + sc->symoff);
-	str_tab = (char *)(sym->header_ptr + sc->stroff);
-	while (i < sym->n_syms)
+	nl_64 = (t_n64 *)(head->ptr + sc->symoff);
+	str_tab = (char *)(head->ptr + sc->stroff);
+	while (i < head->macho.n_syms)
 	{
 		new[i].nl = nl_64[i];
 		i++;
 	}
-	m_sort(new, str_tab, 0, sym->n_syms - 1);
-	print_symbols(sym, new, str_tab);
+	m_sort(new, str_tab, 0, head->macho.n_syms - 1);
+	print_symbols(&head->macho, new, str_tab);
 }
 
 void	add_sect_in_struct_64(t_symbols *sym, t_lc *lc)
