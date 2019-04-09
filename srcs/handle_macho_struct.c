@@ -67,6 +67,10 @@ void	add_sect_in_struct_64(t_symbols *sym, t_lc *lc)
 	uint32_t					i;
 
 	sc = (struct segment_command_64 *)lc;
+	/*
+	if (!sc)
+		return (1);
+		*/
 	if (sc->nsects > 0)
 	{
 		i = 0;
@@ -88,9 +92,16 @@ void	add_sect_in_struct_32(t_symbols *sym, t_lc *lc)
 	uint32_t				i;
 
 	sc = (struct segment_command *)lc;
+	/*
+	if (!sc)
+		return (1);
+		*/
 	if (sc->nsects > 0)
 	{
 		i = 0;
+		/*
+			Check sections with current position and their size
+		*/
 		sect_32 = (struct section *)((char *)sc + sizeof(*sc));
 		while (i < sc->nsects)
 		{
