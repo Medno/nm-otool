@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/09 19:14:48 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/10 16:07:51 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,19 @@ typedef struct	s_section
 typedef struct	s_symbols
 {
 	char		*obj_name;
-	uint32_t	magic;
-	t_section	sections[255];
-	uint8_t		n_cmds;
+	t_section	sect[255];
 	uint8_t		n_sects;
 	uint32_t	n_syms;
 	t_lc		*lc;
 	uint8_t		l_endian;
+	uint32_t	magic;
+	cpu_type_t	cpu_type;
+	uint32_t	n_cmds;
+	uint32_t	s_lc;
+	uint8_t		is64;
+	uint32_t	cur_s_lc;
+	char		*end_mach_h;
+	uint32_t	s_symtab;
 }				t_symbols;
 
 typedef struct	s_finfo
@@ -123,11 +129,11 @@ uint8_t			is_macho(uint32_t magic);
 uint8_t			is_fat(uint32_t magic);
 uint8_t			is_archive(char *ptr);
 
-t_symbols		init_symbols_struct(char *name, void *ptr);
+uint8_t			init_symbols_struct(t_finfo file, t_fhead *head, char *name);
 
-void			handle_32(t_finfo file, t_fhead *head, t_sc *sc);
-void			handle_64(t_finfo file, t_fhead *head, t_sc *sc);
-void			add_sect_in_struct_64(t_symbols *sym, t_lc *lc);
-void			add_sect_in_struct_32(t_symbols *sym, t_lc *lc);
+uint8_t			handle_32(t_finfo file, t_fhead *head, t_sc *sc);
+uint8_t			handle_64(t_finfo file, t_fhead *head, t_sc *sc);
+uint8_t			add_sect_64(t_finfo file, t_fhead *head, t_lc *lc);
+uint8_t			add_sect_32(t_finfo file, t_fhead *head, t_lc *lc);
 
 #endif

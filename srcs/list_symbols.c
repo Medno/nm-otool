@@ -6,53 +6,47 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/09 19:19:29 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/10 17:40:54 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-void	display_sym_tab(t_finfo file, t_fhead *head, t_lc *lc)
+uint8_t	display_sym_tab(t_finfo file, t_fhead *head, t_lc *lc)
 {
 	uint32_t	i;
 	t_sc		*sc;
-(void)file;
+
 	i = 0;
 	sc = (t_sc *)lc;
-	head->macho.n_syms = sc->nsyms;
-	if (head->macho.magic == MH_MAGIC)
-		handle_32(file, head, sc);
-	else if (head->macho.magic == MH_MAGIC_64)
-		handle_64(file, head, sc);
+	head->macho.n_syms = to_big_endian(head->macho.l_endian, sc->nsyms);
+
+	if (!head->macho.is64 && handle_32(file, head, sc))
+		return (1);
+	else if (head->macho.is64 && handle_64(file, head, sc))
+		return (1);
+	return (0);
 }
 
-uint8_t	fill_struct(t_symbols *sym)
+uint8_t	fill_struct(t_finfo file, t_fhead *head, t_lc *lc)
 {
-	t_lc		*lc;
 	uint32_t	i;
 	uint32_t	lc_cmdsize;
+	uint32_t	lc_cmd;
 
 	i = 0;
-	/*
-	if (sizeof(t_lc) + ptr + sizeof(struct mach_header) > file.size)
-		return (1);
-	*/
-	lc = sym->lc;
-	while (i < sym->n_cmds)
+	while (i < head->macho.n_cmds)
 	{
-		/*
-		if (sizeof(t_lc) + ptr + sizeof(struct mach_header) > file.size)
+		lc_cmd = to_big_endian(head->macho.l_endian, lc->cmd);
+		lc_cmdsize = to_big_endian(head->macho.l_endian, lc->cmdsize);
+		if ((char *)lc + lc_cmdsize > (char *)head->macho.lc + head->macho.s_lc
+			|| (head->macho.is64 && lc_cmdsize % 8)
+			|| (!head->macho.is64 && lc_cmdsize % 4))
 			return (1);
-		*/
-		lc_cmdsize = to_big_endian(sym->l_endian, lc->cmdsize);
-		/*
-		if (lc_cmdsize % 4 || lc_cmdsize % 8)
+		if (lc_cmd == LC_SEGMENT_64 && add_sect_64(file, head, lc))
 			return (1);
-		*/
-		if (lc->cmd == LC_SEGMENT_64)
-			add_sect_in_struct_64(sym, lc);
-		else if (lc->cmd == LC_SEGMENT)
-			add_sect_in_struct_32(sym, lc);
+		else if (lc_cmd == LC_SEGMENT && add_sect_32(file, head, lc))
+			return (1);
 		lc = (void *)lc + lc_cmdsize;
 		i++;
 	}
@@ -62,18 +56,20 @@ uint8_t	fill_struct(t_symbols *sym)
 uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 {
 	t_lc		*lc;
-//	t_symbols	sym;
 	uint32_t	i;
 	uint32_t	lc_cmdsize;
 
 	i = 0;
-	head->macho = init_symbols_struct(obj_n, head->current);
-	fill_struct(&head->macho);
+	if (init_symbols_struct(file, head, obj_n))
+		return (1);
 	lc = head->macho.lc;
+	if (fill_struct(file, head, lc))
+		return (1);
 	while (i < head->macho.n_cmds)
 	{
 		lc_cmdsize = to_big_endian(head->macho.l_endian, lc->cmdsize);
-		if (lc->cmd == LC_SYMTAB)
+		head->macho.cur_s_lc = lc_cmdsize;
+		if (to_big_endian(head->macho.l_endian, lc->cmd) == LC_SYMTAB)
 			display_sym_tab(file, head, lc);
 		lc = (void *)lc + lc_cmdsize;
 		i++;

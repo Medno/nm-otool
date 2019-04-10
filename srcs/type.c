@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 13:35:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/04 17:19:00 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/10 17:39:44 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ char	find_n_type(t_symbols *sym, uint8_t type, uint32_t value, uint8_t sect)
 			return ('a');
 		else if ((type & N_TYPE) == N_SECT)
 		{
-			if (ft_strequ(sym->sections[sect - 1].name, SECT_TEXT))
+			if (ft_strequ(sym->sect[sect - 1].name, SECT_TEXT))
 				return ('t');
-			else if (ft_strequ(sym->sections[sect - 1].name, SECT_BSS))
+			else if (ft_strequ(sym->sect[sect - 1].name, SECT_BSS))
 				return ('b');
-			else if (ft_strequ(sym->sections[sect - 1].name, SECT_DATA))
+			else if (ft_strequ(sym->sect[sect - 1].name, SECT_DATA))
 				return ('d');
 			return ('s');
 		}

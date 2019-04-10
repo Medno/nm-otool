@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/09 19:20:07 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/10 17:40:18 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,16 @@ void	print_struct_sym(t_symbols sym)
 	ft_printf("Number of commands : |%zu|\n", sym.n_cmds);
 	ft_printf("Number of n_sections : |%zu|\n", sym.n_sects);
 	ft_printf("Number of n_syms : |%zu|\n", sym.n_syms);
+	ft_printf("Size of n_lc : |%zu|\n", sym.s_lc);
+	ft_printf("CPU : |%d|\n", sym.cpu_type);
+	ft_printf("endian : |%zu|\n", sym.l_endian);
 	if (sym.n_sects > 0)
 	{
 		i = 0;
 		while (i < sym.n_sects)
 		{
-			ft_printf("Name of section[%zu]: |%s|\n", i, sym.sections[i].name);
-			ft_printf("-->	Name of segment: |%s|\n", sym.sections[i].seg_name);
+			ft_printf("Name of section[%zu]: |%s|\n", i, sym.sect[i].name);
+			ft_printf("-->	Name of segment: |%s|\n", sym.sect[i].seg_name);
 			i++;
 		}
 	}
