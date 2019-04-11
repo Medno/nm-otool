@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/11 16:42:09 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/11 17:43:27 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ typedef struct	s_section
 {
 	char			*name;
 	char			*seg_name;
+	uint32_t		offset;
+	uint32_t		size;
 	struct nlist_64	*ptr;
 }				t_section;
 
@@ -98,6 +100,8 @@ enum			e_opts
 	OPT_P = (1 << 3),
 	OPT_R = (1 << 4),
 	OPT_U = (1 << 5),
+	FT_NM = (1 << 6),
+	FT_OTOOL = (1 << 7)
 };
 
 enum			e_error
@@ -133,6 +137,9 @@ uint8_t			is_fat(uint32_t magic);
 uint8_t			is_archive(char *ptr);
 
 uint8_t			init_symbols_struct(t_finfo file, t_fhead *head, char *name);
+
+uint8_t			handle_file(char *arg, uint8_t res, uint8_t opts);
+int				invalid_parameters(int ac, char **av, uint8_t *o, char *fil[]);
 
 uint8_t			handle_32(t_finfo file, t_fhead *head, t_sc *sc);
 uint8_t			handle_64(t_finfo file, t_fhead *head, t_sc *sc);

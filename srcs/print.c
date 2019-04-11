@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/11 16:42:24 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/11 18:28:46 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,38 @@ void	print_struct_sym(t_symbols sym)
 	ft_printf("===========================================================\n");
 }
 
+void	print_otool(t_finfo f, t_fhead *head, t_ulist new[], char *str_tab)
+{
+	uint32_t	i;
+	t_section	sect;
+	uint8_t		sym;
+	uint8_t		padding;
+
+	(void)f;
+	(void)new;
+	(void)str_tab;
+	i = 0;
+	while (i < head->macho.n_syms)
+	{
+		if (ft_strequ(head->macho.sect[i].name, SECT_TEXT))
+			break ;
+		i++;
+	}
+	sect = head->macho.sect[i];
+	i = 0;
+	padding = 15;
+	while (i < sect.size)
+	{
+		if (i > 0 && i % 16 == 0)
+			ft_printf("\n");
+		sym = *((head->current) + sect.offset + i) < 0
+			? *((head->current) + sect.offset + i) << 3 >> 3
+			: *((head->current) + sect.offset + i);
+		ft_printf("%02x ", sym);
+		i++;
+	}
+}
+
 void	print_symbols(t_finfo f, t_fhead *head, t_ulist new[], char *str_tab)
 {
 	uint32_t	i;
@@ -51,25 +83,30 @@ void	print_symbols(t_finfo f, t_fhead *head, t_ulist new[], char *str_tab)
 		ft_printf("\n%s(%s):\n", f.name, head->macho.obj_name);
 	else if (head->archive)
 		ft_printf("\n%s(%s) (for architecture %s):\n",
-			f.name, head->macho.obj_name, head->fat_arch);
+				f.name, head->macho.obj_name, head->fat_arch);
 	else if (head->fat && head->fat_arch)
 		ft_printf("\n%s (for architecture %s):\n",
 				f.name, head->fat_arch);
-	while (i < head->macho.n_syms)
+	if ((f.opts & FT_NM))
 	{
-		if (!(new[i].nl.n_type & N_STAB))
+		while (i < head->macho.n_syms)
 		{
-			type = find_sym_type(&head->macho,
-					new[i].nl.n_type, new[i].nl.n_value, new[i].nl.n_sect);
-			if (new[i].nl.n_value
-					|| (new[i].nl.n_value == 0 && (ft_toupper(type) == 'T'
-					|| ft_toupper(type) == 'A')))
-				ft_printf("%0*llx %c %s\n", padding, new[i].nl.n_value, type,
-						str_tab + new[i].nl.n_un.n_strx);
-			else
-				ft_printf("%*s %c %s\n", padding, "", type,
-						str_tab + new[i].nl.n_un.n_strx);
+			if (!(new[i].nl.n_type & N_STAB))
+			{
+				type = find_sym_type(&head->macho,
+						new[i].nl.n_type, new[i].nl.n_value, new[i].nl.n_sect);
+				if (new[i].nl.n_value
+						|| (new[i].nl.n_value == 0 && (ft_toupper(type) == 'T'
+								|| ft_toupper(type) == 'A')))
+					ft_printf("%0*llx %c %s\n", padding, new[i].nl.n_value, type,
+							str_tab + new[i].nl.n_un.n_strx);
+				else
+					ft_printf("%*s %c %s\n", padding, "", type,
+							str_tab + new[i].nl.n_un.n_strx);
+			}
+			i++;
 		}
-		i++;
 	}
+	else
+		print_otool(f, head, new, str_tab);
 }

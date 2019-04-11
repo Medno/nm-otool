@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 17:05:35 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/11 16:21:47 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/11 17:43:54 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,58 +81,58 @@ uint8_t	handle_64(t_finfo file, t_fhead *head, t_sc *sc)
 	return (0);
 }
 
-uint8_t	add_sect_64(t_finfo file, t_fhead *head, t_lc *lc)
+uint8_t	add_sect_64(t_finfo file, t_fhead *h, t_lc *lc)
 {
 	struct segment_command_64	*sc;
-	struct section_64			*sect_64;
+	struct section_64			*s64;
 	uint32_t					i;
 	uint32_t					sc_nsects;
 
 	sc = (struct segment_command_64 *)lc;
-	sc_nsects = to_big_endian(head->macho.l_endian, sc->nsects);
+	sc_nsects = to_big_endian(h->macho.l_endian, sc->nsects);
 	if (sc_nsects > 0)
 	{
 		i = 0;
-		sect_64 = (struct section_64 *)((char *)sc + sizeof(*sc));
-		if (sect_64 && (char *)sc + sizeof(*sect_64) > head->ptr + file.size)
+		s64 = (struct section_64 *)((char *)sc + sizeof(*sc));
+		if (s64 && (char *)sc + sizeof(*s64) > h->ptr + file.size)
 			return (1);
 		while (i < sc_nsects)
 		{
-			head->macho.sect[head->macho.n_sects + i].name =
-				(sect_64 + i)->sectname;
-			head->macho.sect[head->macho.n_sects + i].seg_name =
-				(sect_64 + i)->segname;
+			h->macho.sect[h->macho.n_sects + i].name = (s64 + i)->sectname;
+			h->macho.sect[h->macho.n_sects + i].seg_name = (s64 + i)->segname;
+			h->macho.sect[h->macho.n_sects + i].offset = (s64 + i)->offset;
+			h->macho.sect[h->macho.n_sects + i].size = (s64 + i)->size;
 			i++;
 		}
-		head->macho.n_sects += sc_nsects;
+		h->macho.n_sects += sc_nsects;
 	}
 	return (0);
 }
 
-uint8_t	add_sect_32(t_finfo file, t_fhead *head, t_lc *lc)
+uint8_t	add_sect_32(t_finfo file, t_fhead *h, t_lc *lc)
 {
 	struct segment_command	*sc;
-	struct section			*sect_32;
+	struct section			*s32;
 	uint32_t				i;
 	uint32_t				sc_nsects;
 
 	sc = (struct segment_command *)lc;
-	sc_nsects = to_big_endian(head->macho.l_endian, sc->nsects);
+	sc_nsects = to_big_endian(h->macho.l_endian, sc->nsects);
 	if (sc_nsects > 0)
 	{
 		i = 0;
-		sect_32 = (struct section *)((char *)sc + sizeof(*sc));
-		if (sect_32 && (char *)sc + sizeof(*sect_32) > head->ptr + file.size)
+		s32 = (struct section *)((char *)sc + sizeof(*sc));
+		if (s32 && (char *)sc + sizeof(*s32) > h->ptr + file.size)
 			return (1);
 		while (i < sc_nsects)
 		{
-			head->macho.sect[head->macho.n_sects + i].name =
-				(sect_32 + i)->sectname;
-			head->macho.sect[head->macho.n_sects + i].seg_name =
-				(sect_32 + i)->segname;
+			h->macho.sect[h->macho.n_sects + i].name = (s32 + i)->sectname;
+			h->macho.sect[h->macho.n_sects + i].seg_name = (s32 + i)->segname;
+			h->macho.sect[h->macho.n_sects + i].offset = (s32 + i)->offset;
+			h->macho.sect[h->macho.n_sects + i].size = (s32 + i)->size;
 			i++;
 		}
-		head->macho.n_sects += sc_nsects;
+		h->macho.n_sects += sc_nsects;
 	}
 	return (0);
 }

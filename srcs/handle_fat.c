@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:18:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/11 16:42:34 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/11 16:58:25 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,17 @@ uint8_t	handle_fat_arch(t_finfo file, t_fhead *head, t_fa *fa, uint8_t l_end)
 	uint8_t	res;
 
 	if (invalid_filetype(head->ptr + to_big_endian(l_end, fa->offset)))
+	{
+		free(head->fat_arch);
 		return (handle_error(file.name, E_NOT_OBJ));
+	}
 	head->current = head->ptr + to_big_endian(l_end, fa->offset);
 	if (is_archive(head->ptr + to_big_endian(l_end, fa->offset)))
 		res = handle_archive(file, head);
 	else
 		res = list_symbols(file, head, file.name);
+	if (res)
+		free(head->fat_arch);
 	return (res);
 }
 
@@ -126,7 +131,5 @@ uint8_t	handle_fat(t_finfo file, t_fhead *head, uint32_t magic)
 	little_endian = magic != FAT_MAGIC && magic != FAT_MAGIC_64;
 	if (magic == FAT_MAGIC || magic == FAT_CIGAM)
 		res = handle_fat_32(file, head, little_endian);
-	if (head->fat_arch)
-		free(head->fat_arch);
 	return (res);
 }
