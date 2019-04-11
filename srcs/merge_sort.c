@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 10:43:01 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/04 16:48:19 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/11 16:10:48 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ static void	compare_nl(t_ulist ar[], char *st, t_point_32 lm, t_fus fus)
 	{
 		f_str = st + ar_l[fus.i].nl.n_un.n_strx;
 		s_str = st + ar_r[fus.j].nl.n_un.n_strx;
-		if (ft_strcmp(f_str, s_str) <= 0)
+		if (ft_strcmp(f_str, s_str) < 0 || (ft_strequ(f_str, s_str)
+			&& ar_l[fus.i].nl.n_value < ar_r[fus.j].nl.n_value))
 		{
 			ar[fus.k] = ar_l[fus.i];
 			fus.i++;
