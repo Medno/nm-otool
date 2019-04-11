@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/10 16:07:51 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/11 16:42:09 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,12 @@ typedef struct	s_finfo
 
 typedef struct	s_fhead
 {
-	char		*ptr;
-	uint8_t		archive;
-	uint8_t		fat;
-	t_symbols	macho;
-	char		*current;
+	char				*ptr;
+	uint8_t				archive;
+	uint8_t				fat;
+	t_symbols			macho;
+	char				*current;
+	char 	*fat_arch;
 }				t_fhead;
 
 enum			e_opts
@@ -102,7 +103,9 @@ enum			e_opts
 enum			e_error
 {
 	E_UNDIF_FILE,
-	E_UNDIF_OPT
+	E_UNDIF_OPT,
+	E_CORRUPT,
+	E_NOT_OBJ
 };
 
 

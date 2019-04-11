@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/10 17:40:54 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/11 16:22:35 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,10 @@ uint8_t	display_sym_tab(t_finfo file, t_fhead *head, t_lc *lc)
 	i = 0;
 	sc = (t_sc *)lc;
 	head->macho.n_syms = to_big_endian(head->macho.l_endian, sc->nsyms);
-
 	if (!head->macho.is64 && handle_32(file, head, sc))
-		return (1);
+		return (handle_error(file.name, E_CORRUPT));
 	else if (head->macho.is64 && handle_64(file, head, sc))
-		return (1);
+		return (handle_error(file.name, E_CORRUPT));
 	return (0);
 }
 
@@ -61,10 +60,10 @@ uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 
 	i = 0;
 	if (init_symbols_struct(file, head, obj_n))
-		return (1);
+		return (handle_error(file.name, E_CORRUPT));
 	lc = head->macho.lc;
 	if (fill_struct(file, head, lc))
-		return (1);
+		return (handle_error(file.name, E_CORRUPT));
 	while (i < head->macho.n_cmds)
 	{
 		lc_cmdsize = to_big_endian(head->macho.l_endian, lc->cmdsize);
@@ -86,18 +85,18 @@ uint8_t	handle_architecture(char *arg, char *ptr, int size, uint8_t opts)
 	magic = *(uint32_t *)ptr;
 	if ((magic == MH_MAGIC || magic == MH_CIGAM)
 			&& ptr + sizeof(struct mach_header) > ptr + size)
-		return (1);
+		return (handle_error(arg, E_CORRUPT));
 	if ((magic == MH_MAGIC_64 || magic == MH_CIGAM_64)
 			&& ptr + sizeof(struct mach_header_64) > ptr + size)
-		return (1);
+		return (handle_error(arg, E_CORRUPT));
 	file.name = arg;
 	file.size = size;
 	file.opts = opts;
-	file.arch = NXGetLocalArchInfo();
 	headers.archive = 0;
 	headers.fat = 0;
 	headers.ptr = ptr;
 	headers.current = ptr;
+	headers.fat_arch = NULL;
 	if (invalid_filetype(ptr))
 		return (handle_error(arg, E_UNDIF_FILE));
 	if (is_fat(magic))

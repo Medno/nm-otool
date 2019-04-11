@@ -59,7 +59,7 @@ uint8_t	handle_fat_arch(t_finfo file, t_fhead *head, t_fa *fa, uint8_t l_end)
 	uint8_t	res;
 
 	if (invalid_filetype(head->ptr + to_big_endian(l_end, fa->offset)))
-		return (1);
+		return (handle_error(file.name, E_NOT_OBJ));
 	head->current = head->ptr + to_big_endian(l_end, fa->offset);
 	if (is_archive(head->ptr + to_big_endian(l_end, fa->offset)))
 		res = handle_archive(file, head);
@@ -78,15 +78,16 @@ uint8_t	handle_fat_32(t_finfo file, t_fhead *head, uint8_t l_endian)
 
 	fh = (t_fh *)head->ptr;
 	n_fa = to_big_endian(l_endian, fh->nfat_arch);
-	if (head->ptr + sizeof(*fh) + (sizeof(t_fa) * n_fa)
-			> head->ptr + file.size)
-		return (1);
+	if (head->ptr + sizeof(*fh) + (sizeof(*fa) * n_fa) > head->ptr + file.size)
+		return (handle_error(file.name, E_CORRUPT));
 	fa = (t_fa *)(head->ptr + sizeof(t_fh));
 	if (contain_arch(file, fa, n_fa, l_endian))
 		return (handle_fat_arch(file, head, fa, l_endian));
 	while (n_fa)
 	{
-		if ((char *)fa + fa->size > head->ptr + file.size)
+		if ((char *)fa + to_big_endian(l_endian, fa->size)
+				> head->ptr + file.size)
+			return (1);
 			return (1);
 //		cpu_type = cpu_name(to_big_endian(l_endian, fa->cputype));
 //		ft_printf("\n%s (for architecture %s):\n", arg, cpu_type);
@@ -105,7 +106,7 @@ uint8_t	handle_fat(t_finfo file, t_fhead *head, uint32_t magic)
 
 	res = 1;
 	if (head->ptr + sizeof(struct fat_header) > head->ptr + file.size)
-		return (1);
+		return (handle_error(file.name, E_CORRUPT));
 	head->fat = 1;
 	little_endian = magic != FAT_MAGIC && magic != FAT_MAGIC_64;
 	if (magic == FAT_MAGIC || magic == FAT_CIGAM)

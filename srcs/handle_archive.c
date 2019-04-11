@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 19:45:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/09 19:11:20 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/11 16:30:45 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ static uint8_t	not_in_array(uint32_t *array, uint32_t value, int i)
 
 static char		*find_correct_size(struct ar_hdr *ah)
 {
-	if (ft_strnequ(ah->ar_name, AR_EFMT1, 3))
-		return ((void *)ah + sizeof(*ah)
-				+ ft_atoi(ah->ar_name + ft_strlen(AR_EFMT1)));
-	return ((void *)ah + sizeof(*ah));
+	int	off;
+
+	off = (ft_strnequ(ah->ar_name, AR_EFMT1, 3))
+		? ft_atoi(ah->ar_name + ft_strlen(AR_EFMT1))
+		: 0;
+	return ((void *)ah + sizeof(*ah) + off);
 }
 
 static uint8_t	for_obj(t_finfo f, t_fhead *head, uint32_t *arr, uint32_t s)
@@ -48,16 +50,12 @@ static uint8_t	for_obj(t_finfo f, t_fhead *head, uint32_t *arr, uint32_t s)
 	{
 		ah = (struct ar_hdr *)(ptr + arr[i]);
 		if (ptr + arr[i] > ptr + f.size)
-			return (1);
+			return (handle_error(f.name, E_CORRUPT));
 		object_header = find_correct_size(ah);
-//		fullpath = ft_strjoin(arg, (void *)ah + sizeof(*ah));
-//		ft_printf("\n%s(%s):\n", arg, (void *)ah + sizeof(*ah));
-//		list_symbols(fullpath, object_header);
 		obj_name = (ft_strnequ(AR_EFMT1, ah->ar_name, 3))
 			? (void *)ah + sizeof(*ah) : ah->ar_name;
 		head->current = object_header;
 		list_symbols(f, head, obj_name);
-//		free(fullpath);
 		i++;
 	}
 	return (0);
@@ -65,7 +63,6 @@ static uint8_t	for_obj(t_finfo f, t_fhead *head, uint32_t *arr, uint32_t s)
 
 static uint32_t	*create_array_off(t_finfo file, t_fhead *head, uint32_t *i)
 {
-	struct ar_hdr	*ah;
 	char			*n_elem;
 	struct ranlib	*ran;
 	uint32_t		nb_ranlib;
@@ -73,8 +70,7 @@ static uint32_t	*create_array_off(t_finfo file, t_fhead *head, uint32_t *i)
 
 	if (head->current + SARMAG > head->current + file.size)
 		return (NULL);
-	ah = (struct ar_hdr *)(head->current + SARMAG);
-	n_elem = find_correct_size(ah);
+	n_elem = find_correct_size((struct ar_hdr *)(head->current + SARMAG));
 	ran = (struct ranlib *)(n_elem + sizeof(uint32_t));
 	nb_ranlib = *(uint32_t*)n_elem / sizeof(struct ranlib);
 	if (!(array = (uint32_t *)ft_memalloc_uint(nb_ranlib)))
@@ -102,7 +98,7 @@ uint8_t			handle_archive(t_finfo file, t_fhead *head)
 	i = 0;
 	head->archive = 1;
 	if (!(array_offset = create_array_off(file, head, &i)))
-		return (1);
+		return (handle_error(file.name, E_CORRUPT));
 	m_sort_uint(array_offset, 0, i - 1);
 	res = for_obj(file, head, array_offset, i);
 	free(array_offset);
