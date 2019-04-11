@@ -102,6 +102,7 @@ uint8_t	add_sect_64(t_finfo file, t_fhead *h, t_lc *lc)
 			h->macho.sect[h->macho.n_sects + i].seg_name = (s64 + i)->segname;
 			h->macho.sect[h->macho.n_sects + i].offset = (s64 + i)->offset;
 			h->macho.sect[h->macho.n_sects + i].size = (s64 + i)->size;
+			h->macho.sect[h->macho.n_sects + i].addr = (s64 + i)->addr;
 			i++;
 		}
 		h->macho.n_sects += sc_nsects;
@@ -130,6 +131,7 @@ uint8_t	add_sect_32(t_finfo file, t_fhead *h, t_lc *lc)
 			h->macho.sect[h->macho.n_sects + i].seg_name = (s32 + i)->segname;
 			h->macho.sect[h->macho.n_sects + i].offset = (s32 + i)->offset;
 			h->macho.sect[h->macho.n_sects + i].size = (s32 + i)->size;
+			h->macho.sect[h->macho.n_sects + i].addr = (s32 + i)->addr;
 			i++;
 		}
 		h->macho.n_sects += sc_nsects;

@@ -52,7 +52,8 @@ typedef struct	s_section
 	char			*name;
 	char			*seg_name;
 	uint32_t		offset;
-	uint32_t		size;
+	uint64_t		size;
+	uint64_t		addr;
 	struct nlist_64	*ptr;
 }				t_section;
 
@@ -76,20 +77,19 @@ typedef struct	s_symbols
 
 typedef struct	s_finfo
 {
-	char				*name;
-	int					size;
-	uint8_t				opts;
-	const NXArchInfo	*arch;
+	char	*name;
+	int		size;
+	uint8_t	opts;
 }				t_finfo;
 
 typedef struct	s_fhead
 {
-	char				*ptr;
-	uint8_t				archive;
-	uint8_t				fat;
-	t_symbols			macho;
-	char				*current;
-	char 	*fat_arch;
+	char		*ptr;
+	uint8_t		archive;
+	uint8_t		fat;
+	t_symbols	macho;
+	char		*current;
+	char 		*fat_arch;
 }				t_fhead;
 
 enum			e_opts

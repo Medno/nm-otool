@@ -58,11 +58,16 @@ void	print_otool(t_finfo f, t_fhead *head, t_ulist new[], char *str_tab)
 	}
 	sect = head->macho.sect[i];
 	i = 0;
-	padding = 15;
+	padding = head->macho.is64 ? 16 : 8;
+	ft_printf("Contents of (%s,%s) section\n", sect.seg_name, sect.name);
 	while (i < sect.size)
 	{
-		if (i > 0 && i % 16 == 0)
-			ft_printf("\n");
+		if (i % 16 == 0)
+		{
+			if (i != 0)
+				ft_printf("\n");
+			ft_printf("%0*llx	", padding, sect.addr + i);
+		}
 		sym = *((head->current) + sect.offset + i) < 0
 			? *((head->current) + sect.offset + i) << 3 >> 3
 			: *((head->current) + sect.offset + i);
@@ -79,6 +84,10 @@ void	print_symbols(t_finfo f, t_fhead *head, t_ulist new[], char *str_tab)
 
 	i = 0;
 	padding = head->macho.is64 ? 16 : 8;
+	if (f.opts & FT_OTOOL && head->archive == 1 && (head->archive = 2))
+		ft_printf("Archive : %s", f.name);
+	else if (f.opts & FT_OTOOL)
+		ft_printf("%s:\n", f.name);
 	if (head->archive && !head->fat_arch)
 		ft_printf("\n%s(%s):\n", f.name, head->macho.obj_name);
 	else if (head->archive)

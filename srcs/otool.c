@@ -24,6 +24,8 @@ int	otool(char *files[], int n_files, uint8_t opts)
 		ret = handle_file(files[i], ret, opts);
 		i++;
 	}
+	if (ret == 0)
+		ft_putchar('\n');
 	return (ret);
 }
 
