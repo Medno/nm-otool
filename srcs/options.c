@@ -6,41 +6,55 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 17:12:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 16:48:15 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 17:53:57 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-int		handle_opts(char *str, uint16_t *opts, size_t size)
+static int	handle_nm_opts(char t, uint16_t *opts)
+{
+	if (t == 'u' && !(*opts & OPT_U))
+		*opts = *opts ^ OPT_U;
+	else if (t == 'g' && !(*opts & OPT_G))
+		*opts = *opts ^ OPT_G;
+	else if (t == 'n' && !(*opts & OPT_N))
+		*opts = *opts ^ OPT_N;
+	else if (t == 'p' && !(*opts & OPT_P))
+		*opts = *opts ^ OPT_P;
+	else if (t == 'r' && !(*opts & OPT_R))
+		*opts = *opts ^ OPT_R;
+	else if (t == 'U' && !(*opts & OPT_UP_U))
+		*opts = *opts ^ OPT_UP_U;
+	else if (t == 'j' && !(*opts & OPT_J))
+		*opts = *opts ^ OPT_J;
+	else
+		return (1);
+	return (0);
+}
+
+int			handle_opts(char *str, uint16_t *opts, size_t size)
 {
 	size_t	i;
 
 	i = 1;
 	while (i < size)
 	{
-		if (str[i] == 'u' && !(*opts & OPT_U))
-			*opts = *opts ^ OPT_U;
-		else if (str[i] == 'g' && !(*opts & OPT_G))
-			*opts = *opts ^ OPT_G;
-		else if (str[i] == 'n' && !(*opts & OPT_N))
-			*opts = *opts ^ OPT_N;
-		else if (str[i] == 'p' && !(*opts & OPT_P))
-			*opts = *opts ^ OPT_P;
-		else if (str[i] == 'r' && !(*opts & OPT_R))
-			*opts = *opts ^ OPT_R;
-		else if (str[i] == 'U' && !(*opts & OPT_UP_U))
-			*opts = *opts ^ OPT_UP_U;
-		else if (str[i] == 'j' && !(*opts & OPT_J))
-			*opts = *opts ^ OPT_J;
-		else
+		if (*opts & FT_NM && handle_nm_opts(str[i], opts))
 			return (1);
+		else if (*opts & FT_OTOOL)
+		{
+			if (str[i] == 't')
+				*opts = *opts | OPT_T;
+			else if (str[i] == 'd' && !(*opts & OPT_D))
+				*opts = *opts ^ OPT_D;
+		}
 		i++;
 	}
 	return (0);
 }
 
-uint8_t	handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st)
+uint8_t		handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st)
 {
 	char	*f_str;
 	char	*s_str;
@@ -60,7 +74,7 @@ uint8_t	handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st)
 		|| (ft_strequ(f_str, s_str) && e_l.nl.n_value < e_r.nl.n_value));
 }
 
-int		invalid_parameters(int ac, char **av, uint16_t *opts, char *files[])
+int			invalid_parameters(int ac, char **av, uint16_t *opts, char *files[])
 {
 	int		i;
 	int		nb_files;
@@ -86,32 +100,4 @@ int		invalid_parameters(int ac, char **av, uint16_t *opts, char *files[])
 		i++;
 	}
 	return (nb_files);
-}
-
-uint8_t	handle_file(char *arg, uint8_t res, uint16_t opts)
-{
-	int			fd;
-	char		*ptr;
-	struct stat	buf;
-	uint8_t		error;
-
-	error = 0;
-	if ((fd = open(arg, O_RDONLY)) < 0)
-		error = handle_error(arg, E_UNDIF, opts);
-	else
-	{
-		if (fstat(fd, &buf) != 0)
-			error = handle_error(arg, E_UNDIF_FILE, opts);
-		else
-		{
-			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
-					== MAP_FAILED)
-				error = handle_error(arg, E_UNDIF_FILE, opts);
-			else
-				error = handle_architecture(arg, ptr, buf.st_size, opts);
-		}
-		if (close(fd) != 0)
-			error = handle_error(arg, E_UNDIF_FILE, opts);
-	}
-	return (res == 1 || error == 1 ? 1 : 0);
 }

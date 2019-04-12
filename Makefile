@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/04/12 16:43:33 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/04/12 17:53:44 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ MAIN_SRCS = type.c					\
 			list_symbols.c			\
 			add_sect.c				\
 			cpu_name.c				\
+			handle_file.c			\
 			options.c
 
 OBJ += $(addprefix ./$(OBJ_PATH)/, $(MAIN_SRCS:.c=.o))

@@ -43,6 +43,5 @@ int		main(int ac, char **av)
 			, files[0]);
 		return (1);
 	}
-	ft_printf("Opts : %b\n", opts);
 	return (nm(files, nb_files, opts));
 }

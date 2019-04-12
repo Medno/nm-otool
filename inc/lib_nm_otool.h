@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 16:49:58 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 17:43:36 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct	s_section
 	uint32_t		offset;
 	uint64_t		size;
 	uint64_t		addr;
-	struct nlist_64	*ptr;
 }				t_section;
 
 typedef struct	s_symbols
@@ -70,9 +69,6 @@ typedef struct	s_symbols
 	uint32_t	n_cmds;
 	uint32_t	s_lc;
 	uint8_t		is64;
-	uint32_t	cur_s_lc;
-	char		*end_mach_h;
-	uint32_t	s_symtab;
 	t_ulist		*arr;
 }				t_symbols;
 
@@ -103,7 +99,9 @@ enum			e_opts
 	OPT_U = (1 << 5),
 	OPT_J = (1 << 6),
 	FT_NM = (1 << 7),
-	FT_OTOOL = (1 << 8)
+	FT_OTOOL = (1 << 8),
+	OPT_T = (1 << 9),
+	OPT_D = (1 << 10)
 };
 
 enum			e_error

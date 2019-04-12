@@ -6,24 +6,28 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 16:45:39 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 17:34:54 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-static t_section	find_sect(t_fhead *head)
+static t_section	*find_sect(t_fhead *head)
 {
 	uint32_t	i;
 
 	i = 0;
-	while (i < head->macho.n_syms
-			&& !ft_strequ(head->macho.sect[i].name, SECT_TEXT))
+	while (i < head->macho.n_sects
+			&& ((!ft_strequ(head->macho.sect[i].name, SECT_TEXT)
+			&& head->opts & OPT_T) || (head->opts & OPT_D
+			&& !ft_strequ(head->macho.sect[i].name, SECT_DATA))))
 		i++;
-	return (head->macho.sect[i]);
+	if (i == head->macho.n_sects)
+		return (NULL);
+	return (&head->macho.sect[i]);
 }
 
-static void			print_otool(t_fhead *head, t_section sect, uint8_t padding)
+static void			print_otool(t_fhead *head, t_section *sect, uint8_t padding)
 {
 	uint32_t	i;
 	uint8_t		sym;
@@ -32,16 +36,16 @@ static void			print_otool(t_fhead *head, t_section sect, uint8_t padding)
 	i = 0;
 	space = head->macho.cpu_type == CPU_TYPE_X86_64
 		|| head->macho.cpu_type == CPU_TYPE_I386;
-	ft_printf("Contents of (%s,%s) section\n", sect.seg_name, sect.name);
-	while (i < sect.size)
+	ft_printf("Contents of (%s,%s) section\n", sect->seg_name, sect->name);
+	while (i < sect->size)
 	{
 		if (i % 16 == 0 && i)
 			ft_putchar('\n');
 		if (i % 16 == 0)
-			ft_printf("%0*llx\t", padding, (sect.addr + i));
-		sym = *((head->current) + sect.offset + i) < 0
-			? *((head->current) + sect.offset + i) << 3 >> 3
-			: *((head->current) + sect.offset + i);
+			ft_printf("%0*llx\t", padding, (sect->addr + i));
+		sym = *((head->current) + sect->offset + i) < 0
+			? *((head->current) + sect->offset + i) << 3 >> 3
+			: *((head->current) + sect->offset + i);
 		ft_printf("%02x", sym);
 		if (space)
 			ft_putchar(' ');
@@ -73,6 +77,7 @@ static void			print_header(t_finfo f, t_fhead *head)
 void				print_symbols(t_finfo f, t_fhead *h, char *st)
 {
 	uint8_t		padding;
+	t_section	*sect;
 
 	padding = h->macho.is64 ? 16 : 8;
 	print_header(f, h);
@@ -80,7 +85,10 @@ void				print_symbols(t_finfo f, t_fhead *h, char *st)
 		print_nm(h, st);
 	else
 	{
-		print_otool(h, find_sect(h), padding);
+		sect = find_sect(h);
+		if (!sect)
+			return ;
+		print_otool(h, sect, padding);
 		ft_putchar('\n');
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 10:43:01 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 16:26:51 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 18:00:15 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void		m_sort(t_fhead *head, char *st, uint32_t l, uint32_t r)
 {
 	t_point_32	lm;
 
-	if (l < r)
+	if (!(head->opts & OPT_P) && l < r)
 	{
 		lm.x = l;
 		lm.y = l + (r - l) / 2;

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 16:18:28 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 17:42:27 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 	while (i < head->macho.n_cmds)
 	{
 		lc_cmdsize = to_big_endian(head->macho.l_endian, lc->cmdsize);
-		head->macho.cur_s_lc = lc_cmdsize;
 		if (to_big_endian(head->macho.l_endian, lc->cmd) == LC_SYMTAB)
 			display_sym_tab(file, head, lc);
 		lc = (void *)lc + lc_cmdsize;

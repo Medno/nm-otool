@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:21:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/11 10:22:12 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 17:42:30 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ uint8_t	init_symbols_struct(t_finfo file, t_fhead *head, char *name)
 	head->macho.magic = magic;
 	head->macho.n_sects = 0;
 	head->macho.n_syms = 0;
-	head->macho.s_symtab = 0;
 	head->macho.is64 = magic == MH_MAGIC_64 || magic == MH_CIGAM_64;
 	head->macho.l_endian = magic == MH_CIGAM || magic == MH_CIGAM_64;
 	return (assign_mach_headers_details(file, head));
