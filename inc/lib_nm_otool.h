@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/11 17:43:27 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 15:30:15 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,14 @@ typedef struct	s_symbols
 	uint32_t	cur_s_lc;
 	char		*end_mach_h;
 	uint32_t	s_symtab;
+	t_ulist		*arr;
 }				t_symbols;
 
 typedef struct	s_finfo
 {
-	char	*name;
-	int		size;
-	uint8_t	opts;
+	char		*name;
+	int			size;
+	uint16_t	opts;
 }				t_finfo;
 
 typedef struct	s_fhead
@@ -94,18 +95,20 @@ typedef struct	s_fhead
 
 enum			e_opts
 {
-	OPT_A = (1 << 0),
+	OPT_UP_U = (1 << 0),
 	OPT_G = (1 << 1),
 	OPT_N = (1 << 2),
 	OPT_P = (1 << 3),
 	OPT_R = (1 << 4),
 	OPT_U = (1 << 5),
-	FT_NM = (1 << 6),
-	FT_OTOOL = (1 << 7)
+	OPT_J = (1 << 6),
+	FT_NM = (1 << 7),
+	FT_OTOOL = (1 << 8)
 };
 
 enum			e_error
 {
+	E_UNDIF,
 	E_UNDIF_FILE,
 	E_UNDIF_OPT,
 	E_CORRUPT,
@@ -113,37 +116,33 @@ enum			e_error
 };
 
 
-uint8_t			handle_architecture(char *arg, char *ptr, int s, uint8_t opts);
+uint8_t			handle_architecture(char *arg, char *ptr, int s, uint16_t opts);
 uint8_t			list_symbols(t_finfo gile, t_fhead *h, char *o_n);
-
-uint8_t			handle_error(char *path, uint8_t error);
-void			merge_sort(struct nlist_64 *ar[], uint32_t f, uint32_t l);
-char			find_sym_type(t_symbols *sy, uint8_t t, uint32_t v, uint8_t s);
-
-void			print_struct_sym(t_symbols sym);
-void			m_sort(t_ulist ar[], char *st, uint32_t l, uint32_t r);
-void			m_sort_uint(uint32_t *ar, uint32_t l, uint32_t r);
-void			print_symbols(t_finfo f, t_fhead *h, t_ulist n[], char *s_tab);
-
 uint8_t			handle_fat(t_finfo file, t_fhead *head, uint32_t magic);
 uint8_t			handle_archive(t_finfo gile, t_fhead *head);
 
-uint32_t		convert_little_endian(uint32_t ptr);
-uint32_t		to_big_endian(uint8_t l_endian, uint32_t value);
+uint8_t			handle_file(char *arg, uint8_t res, uint16_t opts);
+
+uint8_t			handle_error(char *path, uint8_t error, uint16_t opts);
 uint8_t			invalid_filetype(char *ptr);
+int				invalid_parameters(int ac, char **av, uint16_t *o, char *fil[]);
+
+char			find_sym_type(t_symbols *sy, uint8_t t, uint32_t v, uint8_t s);
+void			print_symbols(t_finfo f, t_fhead *h, char *s_tab);
+char			*cpu_name(cpu_type_t ct, cpu_subtype_t sub);
 
 uint8_t			is_macho(uint32_t magic);
 uint8_t			is_fat(uint32_t magic);
 uint8_t			is_archive(char *ptr);
+uint64_t		to_big_endian(uint8_t l_endian, uint64_t value);
 
 uint8_t			init_symbols_struct(t_finfo file, t_fhead *head, char *name);
-
-uint8_t			handle_file(char *arg, uint8_t res, uint8_t opts);
-int				invalid_parameters(int ac, char **av, uint8_t *o, char *fil[]);
 
 uint8_t			handle_32(t_finfo file, t_fhead *head, t_sc *sc);
 uint8_t			handle_64(t_finfo file, t_fhead *head, t_sc *sc);
 uint8_t			add_sect_64(t_finfo file, t_fhead *head, t_lc *lc);
 uint8_t			add_sect_32(t_finfo file, t_fhead *head, t_lc *lc);
 
+void			m_sort(t_fhead *head, char *st, uint32_t l, uint32_t r);
+void			m_sort_uint(uint32_t *ar, uint32_t l, uint32_t r);
 #endif

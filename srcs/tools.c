@@ -6,13 +6,13 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 14:55:30 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/05 15:44:04 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 15:35:07 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-uint32_t	convert_little_endian(uint32_t ptr)
+uint64_t	convert_little_endian(uint64_t ptr)
 {
 	return (((unsigned)ptr << 24)
 		+ ((unsigned)ptr >> 8 << 24 >> 8)
@@ -40,7 +40,7 @@ uint8_t		is_archive(char *ptr)
 	return (ft_strnequ(tmp, ARMAG, SARMAG));
 }
 
-uint32_t	to_big_endian(uint8_t l_endian, uint32_t value)
+uint64_t	to_big_endian(uint8_t l_endian, uint64_t value)
 {
 	if (l_endian)
 		return (convert_little_endian(value));

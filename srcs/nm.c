@@ -6,14 +6,13 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:47 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/11 18:30:38 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 15:01:50 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-
-int		nm(char *files[], int n_files, uint8_t opts)
+int		nm(char *files[], int n_files, uint16_t opts)
 {
 	uint8_t	ret;
 	int		i;
@@ -32,13 +31,18 @@ int		nm(char *files[], int n_files, uint8_t opts)
 
 int		main(int ac, char **av)
 {
-	uint8_t	opts;
-	char	*files[ac];
-	int		nb_files;
+	uint16_t	opts;
+	char		*files[ac];
+	int			nb_files;
 
 	opts = FT_NM;
 	if ((nb_files = invalid_parameters(ac, av, &opts, files)) == -1)
-		return (handle_error(files[0], E_UNDIF_OPT));
+	{
+		ft_dprintf(2,
+			"ft_nm: Unknown command line argument '%s'. Try ft_nm -h for help\n"
+			, files[0]);
+		return (1);
+	}
 	ft_printf("Opts : %b\n", opts);
 	return (nm(files, nb_files, opts));
 }

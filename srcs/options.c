@@ -6,21 +6,21 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 17:12:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/11 18:33:50 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 15:08:03 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-int		handle_opts(char *str, uint8_t *opts, size_t size, char *files[])
+int		handle_opts(char *str, uint16_t *opts, size_t size)
 {
 	size_t	i;
 
 	i = 1;
 	while (i < size)
 	{
-		if (str[i] == 'a' && !(*opts & OPT_A))
-			*opts = *opts ^ OPT_A;
+		if (str[i] == 'u' && !(*opts & OPT_U))
+			*opts = *opts ^ OPT_U;
 		else if (str[i] == 'g' && !(*opts & OPT_G))
 			*opts = *opts ^ OPT_G;
 		else if (str[i] == 'n' && !(*opts & OPT_N))
@@ -29,19 +29,18 @@ int		handle_opts(char *str, uint8_t *opts, size_t size, char *files[])
 			*opts = *opts ^ OPT_P;
 		else if (str[i] == 'r' && !(*opts & OPT_R))
 			*opts = *opts ^ OPT_R;
-		else if (str[i] == 'u' && !(*opts & OPT_U))
-			*opts = *opts ^ OPT_U;
+		else if (str[i] == 'U' && !(*opts & OPT_UP_U))
+			*opts = *opts ^ OPT_UP_U;
+		else if (str[i] == 'j' && !(*opts & OPT_J))
+			*opts = *opts ^ OPT_J;
 		else
-		{
-			files[0] = str;
 			return (1);
-		}
 		i++;
 	}
 	return (0);
 }
 
-int		invalid_parameters(int ac, char **av, uint8_t *opts, char *files[])
+int		invalid_parameters(int ac, char **av, uint16_t *opts, char *files[])
 {
 	int		i;
 	int		nb_files;
@@ -56,20 +55,20 @@ int		invalid_parameters(int ac, char **av, uint8_t *opts, char *files[])
 		{
 			if (ft_strequ("--", av[i]))
 				end_of_opts = 1;
-			else if (handle_opts(av[i], opts, ft_strlen(av[i]), files))
+			else if (handle_opts(av[i], opts, ft_strlen(av[i])))
+			{
+				files[0] = av[i];
 				return (-1);
+			}
 		}
 		else
-		{
-			files[nb_files] = av[i];
-			nb_files++;
-		}
+			files[nb_files++] = av[i];
 		i++;
 	}
 	return (nb_files);
 }
 
-uint8_t	handle_file(char *arg, uint8_t res, uint8_t opts)
+uint8_t	handle_file(char *arg, uint8_t res, uint16_t opts)
 {
 	int			fd;
 	char		*ptr;
@@ -78,21 +77,21 @@ uint8_t	handle_file(char *arg, uint8_t res, uint8_t opts)
 
 	error = 0;
 	if ((fd = open(arg, O_RDONLY)) < 0)
-		error = handle_error(arg, E_UNDIF_FILE);
+		error = handle_error(arg, E_UNDIF, opts);
 	else
 	{
 		if (fstat(fd, &buf) != 0)
-			error = handle_error(arg, E_UNDIF_FILE);
+			error = handle_error(arg, E_UNDIF_FILE, opts);
 		else
 		{
 			if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 					== MAP_FAILED)
-				error = handle_error(arg, E_UNDIF_FILE);
+				error = handle_error(arg, E_UNDIF_FILE, opts);
 			else
 				error = handle_architecture(arg, ptr, buf.st_size, opts);
 		}
 		if (close(fd) != 0)
-			error = handle_error(arg, E_UNDIF_FILE);
+			error = handle_error(arg, E_UNDIF_FILE, opts);
 	}
 	return (res == 1 || error == 1 ? 1 : 0);
 }
