@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 15:30:15 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 16:49:58 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,17 @@ typedef struct	s_finfo
 {
 	char		*name;
 	int			size;
-	uint16_t	opts;
 }				t_finfo;
 
 typedef struct	s_fhead
 {
 	char		*ptr;
+	uint16_t	opts;
 	uint8_t		archive;
 	uint8_t		fat;
 	t_symbols	macho;
 	char		*current;
-	char 		*fat_arch;
+	char		*fat_arch;
 }				t_fhead;
 
 enum			e_opts
@@ -115,7 +115,6 @@ enum			e_error
 	E_NOT_OBJ
 };
 
-
 uint8_t			handle_architecture(char *arg, char *ptr, int s, uint16_t opts);
 uint8_t			list_symbols(t_finfo gile, t_fhead *h, char *o_n);
 uint8_t			handle_fat(t_finfo file, t_fhead *head, uint32_t magic);
@@ -127,9 +126,12 @@ uint8_t			handle_error(char *path, uint8_t error, uint16_t opts);
 uint8_t			invalid_filetype(char *ptr);
 int				invalid_parameters(int ac, char **av, uint16_t *o, char *fil[]);
 
+uint8_t			handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st);
+
 char			find_sym_type(t_symbols *sy, uint8_t t, uint32_t v, uint8_t s);
-void			print_symbols(t_finfo f, t_fhead *h, char *s_tab);
 char			*cpu_name(cpu_type_t ct, cpu_subtype_t sub);
+void			print_symbols(t_finfo f, t_fhead *h, char *s_tab);
+void			print_nm(t_fhead *h, char *s_tab);
 
 uint8_t			is_macho(uint32_t magic);
 uint8_t			is_fat(uint32_t magic);

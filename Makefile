@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/04/12 12:29:51 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/04/12 16:43:33 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ MAIN_SRCS = type.c					\
 			merge_sort_uint.c		\
 			error.c					\
 			print.c					\
+			print_nm.c				\
 			tools.c					\
 			symbols_struct.c		\
 			handle_fat.c			\

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 17:12:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 15:08:03 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 16:48:15 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,26 @@ int		handle_opts(char *str, uint16_t *opts, size_t size)
 		i++;
 	}
 	return (0);
+}
+
+uint8_t	handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st)
+{
+	char	*f_str;
+	char	*s_str;
+
+	f_str = st + e_l.nl.n_un.n_strx;
+	s_str = st + e_r.nl.n_un.n_strx;
+	if (head->opts & OPT_N && !(head->opts & OPT_R))
+		return (e_l.nl.n_value < e_r.nl.n_value);
+	else if (head->opts & OPT_N)
+		return (e_l.nl.n_value >= e_r.nl.n_value);
+	else if (head->opts & OPT_R)
+	{
+		return (ft_strcmp(f_str, s_str) > 0 || (ft_strequ(f_str, s_str)
+			&& e_l.nl.n_value > e_r.nl.n_value));
+	}
+	return (ft_strcmp(f_str, s_str) < 0
+		|| (ft_strequ(f_str, s_str) && e_l.nl.n_value < e_r.nl.n_value));
 }
 
 int		invalid_parameters(int ac, char **av, uint16_t *opts, char *files[])

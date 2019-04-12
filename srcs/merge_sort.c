@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 10:43:01 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 15:20:20 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/12 16:26:51 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,12 @@ static void	compare_nl(t_fhead *head, char *st, t_point_32 lm, t_fus fus)
 {
 	t_ulist	ar_l[fus.n1];
 	t_ulist	ar_r[fus.n2];
-	char	*f_str;
-	char	*s_str;
 
 	copy_array(head->macho.arr, ar_l, fus.n1, lm.x);
 	copy_array(head->macho.arr, ar_r, fus.n2, lm.y + 1);
 	while (fus.i < fus.n1 && fus.j < fus.n2)
 	{
-		f_str = st + ar_l[fus.i].nl.n_un.n_strx;
-		s_str = st + ar_r[fus.j].nl.n_un.n_strx;
-		if (ft_strcmp(f_str, s_str) < 0 || (ft_strequ(f_str, s_str)
-			&& ar_l[fus.i].nl.n_value < ar_r[fus.j].nl.n_value))
+		if (handle_sort(head, ar_l[fus.i], ar_r[fus.j], st))
 		{
 			head->macho.arr[fus.k] = ar_l[fus.i];
 			fus.i++;
