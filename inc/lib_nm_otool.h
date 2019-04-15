@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 18:01:41 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 19:58:26 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,6 @@ uint64_t		to_big_endian(uint8_t l_endian, uint64_t value);
 uint8_t			init_symbols_struct(t_finfo file, t_fhead *head, char *name);
 
 uint8_t			handle_macho(t_finfo file, t_fhead *head, t_sc *sc);
-//uint8_t			handle_32(t_finfo file, t_fhead *head, t_sc *sc);
-//uint8_t			handle_64(t_finfo file, t_fhead *head, t_sc *sc);
 uint8_t			add_sect_64(t_finfo file, t_fhead *head, t_lc *lc);
 uint8_t			add_sect_32(t_finfo file, t_fhead *head, t_lc *lc);
 

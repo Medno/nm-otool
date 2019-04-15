@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 18:23:41 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 19:05:52 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void				print_symbols(t_finfo f, t_fhead *h, char *st)
 	uint8_t		padding;
 	t_section	*sect;
 
-ft_printf("%s output\n", f.name);
 	padding = h->macho.is64 ? 16 : 8;
 	print_header(f, h);
 	if ((h->opts & FT_NM))

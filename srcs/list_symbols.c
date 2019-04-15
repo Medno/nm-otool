@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 18:31:55 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 19:05:55 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 	uint32_t	lc_cmdsize;
 
 	i = 0;
-	ft_printf("List -> %s\n", head->macho.obj_name);
 	if (init_symbols_struct(file, head, obj_n))
 		return (handle_error(file.name, E_CORRUPT, head->opts));
 	lc = head->macho.lc;
