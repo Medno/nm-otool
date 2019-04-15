@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 17:34:54 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 18:23:41 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ static void			print_otool(t_fhead *head, t_section *sect, uint8_t padding)
 	i = 0;
 	space = head->macho.cpu_type == CPU_TYPE_X86_64
 		|| head->macho.cpu_type == CPU_TYPE_I386;
-	ft_printf("Contents of (%s,%s) section\n", sect->seg_name, sect->name);
+	ft_printf("Contents of (%s,%s) section", sect->seg_name, sect->name);
 	while (i < sect->size)
 	{
-		if (i % 16 == 0 && i)
+		if (i % 16 == 0)
 			ft_putchar('\n');
 		if (i % 16 == 0)
 			ft_printf("%0*llx\t", padding, (sect->addr + i));
@@ -79,6 +79,7 @@ void				print_symbols(t_finfo f, t_fhead *h, char *st)
 	uint8_t		padding;
 	t_section	*sect;
 
+ft_printf("%s output\n", f.name);
 	padding = h->macho.is64 ? 16 : 8;
 	print_header(f, h);
 	if ((h->opts & FT_NM))

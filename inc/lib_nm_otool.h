@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 17:43:36 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 18:01:41 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ typedef struct	s_sort_var
 
 typedef struct	s_univ_nlist
 {
-	t_n64	nl;
+	char		*name;
+	uint8_t		type;
+	uint8_t		sect;
+	uint64_t	value;
 }				t_ulist;
 
 typedef struct	s_section
@@ -70,12 +73,13 @@ typedef struct	s_symbols
 	uint32_t	s_lc;
 	uint8_t		is64;
 	t_ulist		*arr;
+	uint8_t		len_value;
 }				t_symbols;
 
 typedef struct	s_finfo
 {
 	char		*name;
-	int			size;
+	uint64_t	size;
 }				t_finfo;
 
 typedef struct	s_fhead
@@ -126,10 +130,11 @@ int				invalid_parameters(int ac, char **av, uint16_t *o, char *fil[]);
 
 uint8_t			handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st);
 
-char			find_sym_type(t_symbols *sy, uint8_t t, uint32_t v, uint8_t s);
+char			find_sym_type(t_symbols *sy, uint8_t t, uint64_t v, uint8_t s);
 char			*cpu_name(cpu_type_t ct, cpu_subtype_t sub);
 void			print_symbols(t_finfo f, t_fhead *h, char *s_tab);
 void			print_nm(t_fhead *h, char *s_tab);
+void			print_header_otool(t_finfo file, t_fhead *head);
 
 uint8_t			is_macho(uint32_t magic);
 uint8_t			is_fat(uint32_t magic);
@@ -138,8 +143,9 @@ uint64_t		to_big_endian(uint8_t l_endian, uint64_t value);
 
 uint8_t			init_symbols_struct(t_finfo file, t_fhead *head, char *name);
 
-uint8_t			handle_32(t_finfo file, t_fhead *head, t_sc *sc);
-uint8_t			handle_64(t_finfo file, t_fhead *head, t_sc *sc);
+uint8_t			handle_macho(t_finfo file, t_fhead *head, t_sc *sc);
+//uint8_t			handle_32(t_finfo file, t_fhead *head, t_sc *sc);
+//uint8_t			handle_64(t_finfo file, t_fhead *head, t_sc *sc);
 uint8_t			add_sect_64(t_finfo file, t_fhead *head, t_lc *lc);
 uint8_t			add_sect_32(t_finfo file, t_fhead *head, t_lc *lc);
 

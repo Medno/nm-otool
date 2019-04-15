@@ -55,7 +55,8 @@ static uint8_t	for_obj(t_finfo f, t_fhead *head, uint32_t *arr, uint32_t s)
 		obj_name = (ft_strnequ(AR_EFMT1, ah->ar_name, 3))
 			? (void *)ah + sizeof(*ah) : ah->ar_name;
 		head->current = object_header;
-		list_symbols(f, head, obj_name);
+		if (list_symbols(f, head, obj_name))
+			return (1);
 		i++;
 	}
 	return (0);

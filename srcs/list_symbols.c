@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 17:42:27 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 18:31:55 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ uint8_t	display_sym_tab(t_finfo file, t_fhead *head, t_lc *lc)
 	i = 0;
 	sc = (t_sc *)lc;
 	head->macho.n_syms = to_big_endian(head->macho.l_endian, sc->nsyms);
-	if (!head->macho.is64 && handle_32(file, head, sc))
-		return (handle_error(file.name, E_CORRUPT, head->opts));
-	else if (head->macho.is64 && handle_64(file, head, sc))
+	head->macho.len_value = 0;
+	if (handle_macho(file, head, sc))
 		return (handle_error(file.name, E_CORRUPT, head->opts));
 	return (0);
 }
@@ -59,6 +58,7 @@ uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 	uint32_t	lc_cmdsize;
 
 	i = 0;
+	ft_printf("List -> %s\n", head->macho.obj_name);
 	if (init_symbols_struct(file, head, obj_n))
 		return (handle_error(file.name, E_CORRUPT, head->opts));
 	lc = head->macho.lc;
@@ -68,10 +68,13 @@ uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 	{
 		lc_cmdsize = to_big_endian(head->macho.l_endian, lc->cmdsize);
 		if (to_big_endian(head->macho.l_endian, lc->cmd) == LC_SYMTAB)
-			display_sym_tab(file, head, lc);
+			if (display_sym_tab(file, head, lc))
+				return (1);
 		lc = (void *)lc + lc_cmdsize;
 		i++;
 	}
+	if (!head->macho.n_syms)
+		print_symbols(file, head, NULL);
 	return (0);
 }
 
@@ -94,6 +97,7 @@ uint8_t	handle_architecture(char *arg, char *ptr, int size, uint16_t opts)
 	headers.ptr = ptr;
 	headers.current = ptr;
 	headers.fat_arch = NULL;
+	headers.macho.n_syms = 0;
 	if (invalid_filetype(ptr))
 		return (handle_error(file.name, E_NOT_OBJ, headers.opts));
 	if (is_fat(magic))

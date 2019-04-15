@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:18:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 16:17:12 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 14:53:08 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,22 @@ uint8_t	handle_fat_arch(t_finfo file, t_fhead *head, t_fa *fa, uint8_t l_end)
 	return (res);
 }
 
+uint8_t	headers_corrupt(t_finfo file, uint32_t n_fa, t_fa *fa, uint8_t l_end)
+{
+	uint64_t	tmp;
+
+	tmp = 0;
+	while (n_fa)
+	{
+		tmp = to_big_endian(l_end, fa->offset) + to_big_endian(l_end, fa->size);
+		if (tmp > file.size)
+			return (1);
+		fa = (void *)fa + sizeof(t_fa);
+		n_fa--;
+	}
+	return (0);
+}
+
 uint8_t	handle_fat_32(t_finfo file, t_fhead *head, uint8_t l_endian)
 {
 	uint32_t	n_fa;
@@ -65,13 +81,12 @@ uint8_t	handle_fat_32(t_finfo file, t_fhead *head, uint8_t l_endian)
 	if (head->ptr + sizeof(*fh) + (sizeof(*fa) * n_fa) > head->ptr + file.size)
 		return (handle_error(file.name, E_CORRUPT, head->opts));
 	fa = (t_fa *)(head->ptr + sizeof(t_fh));
+	if (headers_corrupt(file, n_fa, fa, l_endian))
+		return (handle_error(file.name, E_CORRUPT, head->opts));
 	if (contain_arch(head, &fa, n_fa, l_endian))
 		return (handle_fat_arch(file, head, fa, l_endian));
 	while (n_fa)
 	{
-		if ((char *)fa + to_big_endian(l_endian, fa->size)
-				> head->ptr + file.size)
-			return (1);
 		head->fat_arch = cpu_name(to_big_endian(l_endian,
 			fa->cputype), to_big_endian(l_endian, fa->cpusubtype));
 		if (handle_fat_arch(file, head, fa, l_endian))

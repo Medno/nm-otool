@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 17:50:14 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 17:54:35 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 17:25:14 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static uint8_t		read_file(char *arg, uint16_t opts, int fd)
 	{
 		if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
 				== MAP_FAILED)
-			error = handle_error(arg, E_UNDIF_FILE, opts);
+			error = handle_error(arg, E_NOT_OBJ, opts);
 		else
 		{
 			error = handle_architecture(arg, ptr, buf.st_size, opts);

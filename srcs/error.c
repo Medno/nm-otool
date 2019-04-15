@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:28 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 15:02:30 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 17:56:18 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ uint8_t	handle_error(char *path, uint8_t error, uint16_t opts)
 		ft_dprintf(2,
 			"%s: The file was not recognized as a valid object file\n", path);
 	else if (error == E_NOT_OBJ && (opts & FT_OTOOL))
-		ft_dprintf(2, "%s: is not an object file\n", path);
+		ft_printf("%s: is not an object file\n", path);
 	else if (error == E_UNDIF_OPT)
 		ft_dprintf(2,
 		"Unknown command line argument '%s'. Try ft_nm -help\n", path);

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 10:43:01 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 18:00:15 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/15 11:58:14 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	copy_array(t_ulist ar[], t_ulist tmp[], uint32_t sz, uint32_t off)
 	}
 }
 
-static void	concat_ar(t_ulist ar[], t_ulist ar_l[], t_ulist ar_r[], t_fus *fus)
+static void	concat_ar(t_ulist *ar, t_ulist ar_l[], t_ulist ar_r[], t_fus *fus)
 {
 	while (fus->i < fus->n1)
 	{
