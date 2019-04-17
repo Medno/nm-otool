@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 19:45:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 19:57:07 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 11:48:20 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static uint8_t	for_obj(t_finfo f, t_fhead *head, char *first)
 	i = 0;
 	ptr = head->current;
 	ah = (struct ar_hdr *)(first);
-	while ((char *)ah < ptr + f.size)
+	while (((char *)ah < ptr + f.size && !head->fat)
+		|| (head->fat && (char *)ah < head->fat_arch_ptr + head->fat_size))
 	{
 		if ((char*)ah > ptr + f.size)
 			return (handle_error(f.name, E_CORRUPT, head->opts));

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:47 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 15:01:50 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 14:56:38 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int		nm(char *files[], int n_files, uint16_t opts)
 	ret = 0;
 	if (!n_files)
 		ret = handle_file("a.out", ret, opts);
+	if (n_files > 1)
+		opts = opts ^ MULT;
 	while (i < n_files)
 	{
 		ret = handle_file(files[i], ret, opts);

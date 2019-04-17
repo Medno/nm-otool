@@ -88,6 +88,8 @@ typedef struct	s_fhead
 	uint16_t	opts;
 	uint8_t		archive;
 	uint8_t		fat;
+	uint64_t	fat_size;
+	char		*fat_arch_ptr;
 	t_symbols	macho;
 	char		*current;
 	char		*fat_arch;
@@ -105,7 +107,9 @@ enum			e_opts
 	FT_NM = (1 << 7),
 	FT_OTOOL = (1 << 8),
 	OPT_T = (1 << 9),
-	OPT_D = (1 << 10)
+	OPT_D = (1 << 10),
+	OPT_A = (1 << 11),
+	MULT = (1 << 12)
 };
 
 enum			e_error

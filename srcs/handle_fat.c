@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:18:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 14:53:08 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 11:48:30 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ uint8_t	handle_fat_arch(t_finfo file, t_fhead *head, t_fa *fa, uint8_t l_end)
 		return (handle_error(file.name, E_NOT_OBJ, head->opts));
 	}
 	head->current = head->ptr + to_big_endian(l_end, fa->offset);
+	head->fat_size = to_big_endian(l_end, fa->size);
+	head->fat_arch_ptr = head->current;
 	if (is_archive(head->ptr + to_big_endian(l_end, fa->offset)))
 		res = handle_archive(file, head);
 	else

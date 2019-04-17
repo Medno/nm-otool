@@ -102,7 +102,7 @@ uint8_t	handle_macho(t_finfo file, t_fhead *head, t_sc *sc)
 	uint8_t		res;
 
 	str_tab = head->current + to_big_endian(head->macho.l_endian, sc->stroff);
-	if (!str_tab > head->ptr + file.size || (head->macho.arr =
+	if (str_tab > head->ptr + file.size || !(head->macho.arr =
 				(t_ulist *)malloc(sizeof(t_ulist) * head->macho.n_syms)))
 		return (1);
 	strsize = to_big_endian(head->macho.l_endian, sc->strsize);
