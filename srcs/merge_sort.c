@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 10:43:01 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 11:58:14 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 15:38:25 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	concat_ar(t_ulist *ar, t_ulist ar_l[], t_ulist ar_r[], t_fus *fus)
 	}
 }
 
-static void	compare_nl(t_fhead *head, char *st, t_point_32 lm, t_fus fus)
+static void	compare_nl(t_fhead *head, t_point_32 lm, t_fus fus)
 {
 	t_ulist	ar_l[fus.n1];
 	t_ulist	ar_r[fus.n2];
@@ -49,7 +49,7 @@ static void	compare_nl(t_fhead *head, char *st, t_point_32 lm, t_fus fus)
 	copy_array(head->macho.arr, ar_r, fus.n2, lm.y + 1);
 	while (fus.i < fus.n1 && fus.j < fus.n2)
 	{
-		if (handle_sort(head, ar_l[fus.i], ar_r[fus.j], st))
+		if (handle_sort(head, ar_l[fus.i], ar_r[fus.j]))
 		{
 			head->macho.arr[fus.k] = ar_l[fus.i];
 			fus.i++;
@@ -64,7 +64,7 @@ static void	compare_nl(t_fhead *head, char *st, t_point_32 lm, t_fus fus)
 	concat_ar(head->macho.arr, ar_l, ar_r, &fus);
 }
 
-static void	merge(t_fhead *head, char *st, t_point_32 lm, uint32_t r)
+static void	merge(t_fhead *head, t_point_32 lm, uint32_t r)
 {
 	t_fus	fus;
 
@@ -73,10 +73,10 @@ static void	merge(t_fhead *head, char *st, t_point_32 lm, uint32_t r)
 	fus.k = lm.x;
 	fus.n1 = lm.y - lm.x + 1;
 	fus.n2 = r - lm.y;
-	compare_nl(head, st, lm, fus);
+	compare_nl(head, lm, fus);
 }
 
-void		m_sort(t_fhead *head, char *st, uint32_t l, uint32_t r)
+void		m_sort(t_fhead *head, uint32_t l, uint32_t r)
 {
 	t_point_32	lm;
 
@@ -84,8 +84,8 @@ void		m_sort(t_fhead *head, char *st, uint32_t l, uint32_t r)
 	{
 		lm.x = l;
 		lm.y = l + (r - l) / 2;
-		m_sort(head, st, lm.x, lm.y);
-		m_sort(head, st, lm.y + 1, r);
-		merge(head, st, lm, r);
+		m_sort(head, lm.x, lm.y);
+		m_sort(head, lm.y + 1, r);
+		merge(head, lm, r);
 	}
 }

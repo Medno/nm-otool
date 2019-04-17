@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 17:05:35 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 10:49:42 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 15:52:09 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,13 +107,11 @@ uint8_t	handle_macho(t_finfo file, t_fhead *head, t_sc *sc)
 		return (1);
 	strsize = to_big_endian(head->macho.l_endian, sc->strsize);
 	symoff = to_big_endian(head->macho.l_endian, sc->symoff);
-	if (head->macho.is64)
-		res = handle_64(head, str_tab, strsize, symoff);
-	else
-		res = handle_32(head, str_tab, strsize, symoff);
+	res = head->macho.is64 ? handle_64(head, str_tab, strsize, symoff)
+		: handle_32(head, str_tab, strsize, symoff);
 	if (!res)
 	{
-		m_sort(head, str_tab, 0, head->macho.n_syms - 1);
+		m_sort(head, 0, head->macho.n_syms - 1);
 		print_symbols(file, head);
 		free_array(head, head->macho.n_syms);
 	}

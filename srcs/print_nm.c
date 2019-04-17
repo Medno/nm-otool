@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 16:42:33 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 15:26:52 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 15:54:05 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,9 @@ static uint8_t	opts_display(t_fhead *head, t_ulist n, char type)
 			return (0);
 	}
 	if (head->opts & OPT_G)
-		if (ft_toupper(type) != type)
+		if (!(n.type & N_EXT))
 			return (0);
 	return (1);
-
 }
 
 static void		print_full_sym(t_fhead *h, t_ulist n, char type)

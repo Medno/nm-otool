@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 17:12:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 15:09:03 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 15:54:23 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,28 +64,27 @@ int			handle_opts(char *str, uint16_t *opts, size_t size)
 	return (0);
 }
 
-uint8_t		handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st)
+uint8_t		handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r)
 {
+	uint8_t	condition;
 	char	*f_str;
 	char	*s_str;
 
-	(void)st;
 	f_str = e_l.name;
 	s_str = e_r.name;
-	if (head->opts & OPT_N && !(head->opts & OPT_R))
-		return ((!e_l.value && !e_r.value && ft_strcmp(f_str, s_str) < 0 && e_l.type == e_r.type)
-			|| (!e_l.value && e_l.type == 1) || (!e_l.value && e_r.value)
+	if (head->opts & OPT_N)
+		condition = ((!e_l.value && !e_r.value && ft_strcmp(f_str, s_str) < 0
+			&& e_l.type == e_r.type) || (!e_l.value && e_l.type == 1)
+			|| (!e_l.value && e_r.value)
 			|| (e_l.value && e_r.value && e_l.value < e_r.value)
-			|| (e_l.value && e_l.value == e_r.value && ft_strcmp(f_str, s_str) < 0));
-	else if (head->opts & OPT_N)
-		return (e_l.value >= e_r.value);
-	else if (head->opts & OPT_R)
-	{
-		return (ft_strcmp(f_str, s_str) > 0 || (ft_strequ(f_str, s_str)
-			&& e_l.value > e_r.value));
-	}
-	return (ft_strcmp(f_str, s_str) < 0
-		|| (ft_strequ(f_str, s_str) && e_l.value < e_r.value));
+			|| (e_l.value && e_l.value == e_r.value
+				&& ft_strcmp(f_str, s_str) < 0));
+	else
+		condition = ft_strcmp(f_str, s_str) < 0
+			|| (ft_strequ(f_str, s_str) && e_l.value < e_r.value);
+	if (head->opts & OPT_R)
+		condition = !condition;
+	return (condition);
 }
 
 int			invalid_parameters(int ac, char **av, uint16_t *opts, char *files[])

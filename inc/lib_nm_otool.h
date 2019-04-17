@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 14:51:58 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 15:38:37 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ uint8_t			handle_error(char *path, uint8_t error, uint16_t opts);
 uint8_t			invalid_filetype(char *ptr);
 int				invalid_parameters(int ac, char **av, uint16_t *o, char *fil[]);
 
-uint8_t			handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st);
+uint8_t			handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r);
 
 char			find_sym_type(t_symbols *sy, uint8_t t, uint64_t v, uint8_t s);
 char			*cpu_name(cpu_type_t ct, cpu_subtype_t sub);
@@ -151,6 +151,6 @@ uint8_t			handle_macho(t_finfo file, t_fhead *head, t_sc *sc);
 uint8_t			add_sect_64(t_finfo file, t_fhead *head, t_lc *lc);
 uint8_t			add_sect_32(t_finfo file, t_fhead *head, t_lc *lc);
 
-void			m_sort(t_fhead *head, char *st, uint32_t l, uint32_t r);
+void			m_sort(t_fhead *head, uint32_t l, uint32_t r);
 void			m_sort_uint(uint32_t *ar, uint32_t l, uint32_t r);
 #endif
