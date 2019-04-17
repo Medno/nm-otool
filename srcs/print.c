@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 19:05:52 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 14:58:59 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ static void			print_otool(t_fhead *head, t_section *sect, uint8_t padding)
 
 static void			print_header(t_finfo f, t_fhead *head)
 {
-	if (head->opts & FT_NM && (head->archive || (head->fat && head->fat_arch)))
+	if (head->opts & FT_NM && ((head->archive || (head->fat && head->fat_arch))
+		|| (head->opts & MULT)))
 		ft_putchar('\n');
 	if (head->opts & FT_OTOOL && head->archive == 1 && (head->archive = 2))
 		ft_printf("Archive : %s\n", f.name);
@@ -72,18 +73,21 @@ static void			print_header(t_finfo f, t_fhead *head)
 				f.name, head->macho.obj_name, head->fat_arch);
 	else if (head->fat && head->fat_arch && head->opts & FT_NM)
 		ft_printf("%s (for architecture %s):\n", f.name, head->fat_arch);
+	else if (head->opts & MULT)
+		ft_printf("%s:\n", f.name);
 }
 
-void				print_symbols(t_finfo f, t_fhead *h, char *st)
+void				print_symbols(t_finfo f, t_fhead *h)
 {
 	uint8_t		padding;
 	t_section	*sect;
 
 	padding = h->macho.is64 ? 16 : 8;
-	print_header(f, h);
-	if ((h->opts & FT_NM))
-		print_nm(h, st);
-	else
+	if (!(h->opts & OPT_A))
+		print_header(f, h);
+	if ((h->opts & FT_NM) && !((h->opts & OPT_U) && (h->opts & OPT_UP_U)))
+		print_nm(f, h);
+	else if (h->opts & FT_OTOOL)
 	{
 		sect = find_sect(h);
 		if (!sect)

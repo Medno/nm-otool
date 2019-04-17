@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 17:12:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 17:18:24 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 15:09:03 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,17 @@ static int	handle_nm_opts(char t, uint16_t *opts)
 		*opts = *opts ^ OPT_UP_U;
 	else if (t == 'j' && !(*opts & OPT_J))
 		*opts = *opts ^ OPT_J;
+	else if (t == 'A' && !(*opts & OPT_A))
+		*opts = *opts ^ OPT_A;
 	else
 		return (1);
 	return (0);
+}
+
+static void	filter_opts(uint16_t *opts)
+{
+	if ((*opts & OPT_U) && !(*opts & OPT_J))
+		*opts = *opts ^ OPT_J;
 }
 
 int			handle_opts(char *str, uint16_t *opts, size_t size)
@@ -51,6 +59,8 @@ int			handle_opts(char *str, uint16_t *opts, size_t size)
 		}
 		i++;
 	}
+	if (*opts & FT_NM)
+		filter_opts(opts);
 	return (0);
 }
 
@@ -63,7 +73,10 @@ uint8_t		handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r, char *st)
 	f_str = e_l.name;
 	s_str = e_r.name;
 	if (head->opts & OPT_N && !(head->opts & OPT_R))
-		return (e_l.value < e_r.value);
+		return ((!e_l.value && !e_r.value && ft_strcmp(f_str, s_str) < 0 && e_l.type == e_r.type)
+			|| (!e_l.value && e_l.type == 1) || (!e_l.value && e_r.value)
+			|| (e_l.value && e_r.value && e_l.value < e_r.value)
+			|| (e_l.value && e_l.value == e_r.value && ft_strcmp(f_str, s_str) < 0));
 	else if (head->opts & OPT_N)
 		return (e_l.value >= e_r.value);
 	else if (head->opts & OPT_R)

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 19:05:55 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/17 11:56:17 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 		i++;
 	}
 	if (!head->macho.n_syms)
-		print_symbols(file, head, NULL);
+		print_symbols(file, head);
 	return (0);
 }
 
