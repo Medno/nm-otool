@@ -76,7 +76,7 @@ uint8_t	handle_64(t_fhead *head, char *str_tab, uint32_t strsize, uint32_t soff)
 	while (i < head->macho.n_syms)
 	{
 		strx = to_big_endian(head->macho.l_endian, nl_64->n_un.n_strx);
-		if (strx > strsize && head->opts & FT_OTOOL)
+		if (strx > strsize && (head->opts & FT_OTOOL) && !(head->opts & OPT_H))
 			return (free_array(head, i));
 		else if (strx > strsize)
 			head->macho.arr[i].name = ft_strdup("bad string index");
