@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:21:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/12 15:02:13 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/29 14:58:36 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ int	otool(char *files[], int n_files, uint16_t opts)
 
 	i = 0;
 	ret = 0;
+	if (!n_files)
+	{
+		ft_printf("ft_otool: at least one file must be specified\n");
+		ret = EXIT_FAILURE;
+	}
 	while (i < n_files)
 	{
 		ret = handle_file(files[i], ret, opts);
