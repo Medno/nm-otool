@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 17:12:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 15:54:23 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/29 15:28:45 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int			handle_opts(char *str, uint16_t *opts, size_t size)
 				*opts = *opts | OPT_T;
 			else if (str[i] == 'd' && !(*opts & OPT_D))
 				*opts = *opts ^ OPT_D;
+			else if (str[i] == 'h' && !(*opts & OPT_H))
+				*opts = *opts ^ OPT_H;
 		}
 		i++;
 	}

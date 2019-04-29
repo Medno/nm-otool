@@ -6,11 +6,34 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 14:58:59 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/29 18:30:41 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
+
+uint8_t				display_mach_header(t_fhead *head)
+{
+	uint32_t	sub;
+
+	if (head->macho.magic == MH_MAGIC_64 && head->fat)
+		sub = to_big_endian(head->macho.l_endian, head->macho.header.cpusubtype ^ CPU_SUBTYPE_LIB64);
+	else
+		sub = to_big_endian(head->macho.l_endian, head->macho.header.cpusubtype);
+	ft_printf("Mach header\n");
+	ft_printf("      magic cputype cpusubtype  caps    filetype ncmds \
+sizeofcmds      flags\n");
+	ft_printf(" %#x %*lu %*llu  0x%02x  %*u %*u %*u %0*#x\n",
+		head->macho.header.magic,
+		ft_strlen("cputype"), head->macho.header.cputype,
+		ft_strlen("cpusubtype"), sub,
+		((head->macho.header.cpusubtype & CPU_SUBTYPE_MASK) >> 24),
+		ft_strlen("sizeofcmds"), head->macho.header.filetype,
+		ft_strlen("ncmds"), head->macho.header.ncmds,
+		ft_strlen("sizeofcmds"), head->macho.header.sizeofcmds,
+		ft_strlen("sizeofcmds"), head->macho.header.flags);
+	return (0);
+}
 
 static t_section	*find_sect(t_fhead *head)
 {
@@ -58,7 +81,7 @@ static void			print_otool(t_fhead *head, t_section *sect, uint8_t padding)
 static void			print_header(t_finfo f, t_fhead *head)
 {
 	if (head->opts & FT_NM && ((head->archive || (head->fat && head->fat_arch))
-		|| (head->opts & MULT)))
+				|| (head->opts & MULT)))
 		ft_putchar('\n');
 	if (head->opts & FT_OTOOL && head->archive == 1 && (head->archive = 2))
 		ft_printf("Archive : %s\n", f.name);
@@ -89,6 +112,11 @@ void				print_symbols(t_finfo f, t_fhead *h)
 		print_nm(f, h);
 	else if (h->opts & FT_OTOOL)
 	{
+		if (h->opts & OPT_H)
+		{
+			display_mach_header(h);
+			return ;
+		}
 		sect = find_sect(h);
 		if (!sect)
 			return ;

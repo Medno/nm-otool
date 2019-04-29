@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:28 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/15 17:56:18 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/29 16:46:07 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ uint8_t	handle_error(char *path, uint8_t error, uint16_t opts)
 {
 	if (opts & FT_NM)
 		ft_dprintf(2, "ft_nm: ");
+	else if (opts & FT_OTOOL)
+		ft_dprintf(2, "ft_otool: ");
 	if (error == E_UNDIF)
 		ft_dprintf(2, "%s: No such file or directory.\n", path);
 	else if (error == E_UNDIF_FILE)

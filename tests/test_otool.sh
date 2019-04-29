@@ -2,6 +2,7 @@
 
 export FILES=./corrupted_folder/*
 #export OPTIONS=("-t" "-d" "-h")
+export OPTIONS=("-h")
 
 for opt in ${OPTIONS[@]}
 do

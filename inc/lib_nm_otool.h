@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 15:38:37 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/29 17:02:48 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct	s_symbols
 	uint8_t		is64;
 	t_ulist		*arr;
 	uint8_t		len_value;
+	t_mh64		header;
 }				t_symbols;
 
 typedef struct	s_finfo
@@ -109,7 +110,8 @@ enum			e_opts
 	OPT_T = (1 << 9),
 	OPT_D = (1 << 10),
 	OPT_A = (1 << 11),
-	MULT = (1 << 12)
+	MULT = (1 << 12),
+	OPT_H = (1 << 13)
 };
 
 enum			e_error
