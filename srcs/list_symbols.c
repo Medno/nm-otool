@@ -72,6 +72,8 @@ uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 		lc = (void *)lc + lc_cmdsize;
 		i++;
 	}
+	if (head->opts & OPT_H)
+		return (display_mach_header(head));
 	if (!head->macho.n_syms)
 		print_symbols(file, head);
 	return (0);

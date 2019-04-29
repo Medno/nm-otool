@@ -12,29 +12,6 @@
 
 #include "lib_nm_otool.h"
 
-uint8_t				display_mach_header(t_fhead *head)
-{
-	uint32_t	sub;
-
-	if (head->macho.magic == MH_MAGIC_64 && head->fat)
-		sub = to_big_endian(head->macho.l_endian, head->macho.header.cpusubtype ^ CPU_SUBTYPE_LIB64);
-	else
-		sub = to_big_endian(head->macho.l_endian, head->macho.header.cpusubtype);
-	ft_printf("Mach header\n");
-	ft_printf("      magic cputype cpusubtype  caps    filetype ncmds \
-sizeofcmds      flags\n");
-	ft_printf(" %#x %*lu %*llu  0x%02x  %*u %*u %*u %0*#x\n",
-		head->macho.header.magic,
-		ft_strlen("cputype"), head->macho.header.cputype,
-		ft_strlen("cpusubtype"), sub,
-		((head->macho.header.cpusubtype & CPU_SUBTYPE_MASK) >> 24),
-		ft_strlen("sizeofcmds"), head->macho.header.filetype,
-		ft_strlen("ncmds"), head->macho.header.ncmds,
-		ft_strlen("sizeofcmds"), head->macho.header.sizeofcmds,
-		ft_strlen("sizeofcmds"), head->macho.header.flags);
-	return (0);
-}
-
 static t_section	*find_sect(t_fhead *head)
 {
 	uint32_t	i;
@@ -112,15 +89,30 @@ void				print_symbols(t_finfo f, t_fhead *h)
 		print_nm(f, h);
 	else if (h->opts & FT_OTOOL)
 	{
-		if (h->opts & OPT_H)
-		{
-			display_mach_header(h);
-			return ;
-		}
 		sect = find_sect(h);
 		if (!sect)
 			return ;
 		print_otool(h, sect, padding);
 		ft_putchar('\n');
 	}
+}
+
+uint8_t				display_mach_header(t_fhead *head)
+{
+	uint32_t	sub;
+
+	sub = head->macho.header.cpusubtype & ~CPU_SUBTYPE_MASK;
+	ft_printf("Mach header\n");
+	ft_printf("      magic cputype cpusubtype  caps    filetype ncmds \
+sizeofcmds      flags\n");
+	ft_printf(" %#x %*lu %*zu  0x%02x  %*u %*u %*u %0*#x\n",
+		head->macho.header.magic,
+		ft_strlen("cputype"), head->macho.header.cputype,
+		ft_strlen("cpusubtype"), sub,
+		((head->macho.header.cpusubtype & CPU_SUBTYPE_MASK) >> 24),
+		ft_strlen("sizeofcmds"), head->macho.header.filetype,
+		ft_strlen("ncmds"), head->macho.header.ncmds,
+		ft_strlen("sizeofcmds"), head->macho.header.sizeofcmds,
+		ft_strlen("sizeofcmds"), head->macho.header.flags);
+	return (0);
 }

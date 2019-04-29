@@ -112,7 +112,8 @@ uint8_t	handle_macho(t_finfo file, t_fhead *head, t_sc *sc)
 	if (!res)
 	{
 		m_sort(head, 0, head->macho.n_syms - 1);
-		print_symbols(file, head);
+		if (!(head->opts & OPT_H))
+			print_symbols(file, head);
 		free_array(head, head->macho.n_syms);
 	}
 	else

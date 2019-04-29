@@ -16,8 +16,6 @@ uint8_t	handle_error(char *path, uint8_t error, uint16_t opts)
 {
 	if (opts & FT_NM)
 		ft_dprintf(2, "ft_nm: ");
-	else if (opts & FT_OTOOL)
-		ft_dprintf(2, "ft_otool: ");
 	if (error == E_UNDIF)
 		ft_dprintf(2, "%s: No such file or directory.\n", path);
 	else if (error == E_UNDIF_FILE)
@@ -30,6 +28,8 @@ uint8_t	handle_error(char *path, uint8_t error, uint16_t opts)
 	else if (error == E_UNDIF_OPT)
 		ft_dprintf(2,
 		"Unknown command line argument '%s'. Try ft_nm -help\n", path);
+	else if (error == E_CORRUPT && (opts & FT_OTOOL))
+		ft_dprintf(2, "ft_otool: %s truncated or malformed file\n", path);
 	else if (error == E_CORRUPT)
 		ft_dprintf(2, "%s truncated or malformed file\n", path);
 	return (1);

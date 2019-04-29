@@ -136,6 +136,8 @@ int				invalid_parameters(int ac, char **av, uint16_t *o, char *fil[]);
 
 uint8_t			handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r);
 
+uint8_t			display_mach_header(t_fhead *head);
+
 char			find_sym_type(t_symbols *sy, uint8_t t, uint64_t v, uint8_t s);
 char			*cpu_name(cpu_type_t ct, cpu_subtype_t sub);
 void			print_symbols(t_finfo f, t_fhead *h);

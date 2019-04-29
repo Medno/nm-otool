@@ -1,11 +1,12 @@
 #!/bin/bash
 
 export FILES=./corrupted_folder/*
-#export OPTIONS=("-t" "-d" "-h")
-export OPTIONS=("-h")
+export OPTIONS=("-t" "-d" "-h")
+#export OPTIONS=("-h")
 
 for opt in ${OPTIONS[@]}
 do
+	echo "otool $opt"
 	for file in $FILES
 	do
 		echo $file
