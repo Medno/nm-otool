@@ -1,6 +1,13 @@
-#!/bin/zsh
-for file in ../corrupted_folder/hell/** ;
-do ;
-	echo $file
-	diff <(./ft_otool $file) <(otool -t $file)
-done;
+#!/bin/bash
+
+export FILES=./corrupted_folder/*
+#export OPTIONS=("-t" "-d" "-h")
+
+for opt in ${OPTIONS[@]}
+do
+	for file in $FILES
+	do
+		echo $file
+		diff <(../ft_otool $opt $file) <(otool $opt $file)
+	done
+done
