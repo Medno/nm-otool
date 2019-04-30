@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:47 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/30 16:16:24 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 17:05:59 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ int		main(int ac, char **av)
 	if ((nb_files = invalid_parameters(ac, av, &opts, files)) == -1)
 	{
 		ft_dprintf(2,
-			"ft_nm: Unknown command line argument '%s'. Try ft_nm -h for help\n"
-			, files[0]);
+			"ft_nm: Unknown command line argument '%s'.\n", files[0]);
+		nm_otool_usage(FT_NM);
 		return (1);
 	}
 	if ((opts & OPT_U) && !(opts & OPT_J))

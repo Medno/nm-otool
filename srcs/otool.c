@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 16:21:54 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/30 15:48:49 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 17:02:09 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	otool(char *files[], int n_files, uint16_t opts)
 	if (opts == FT_OTOOL)
 	{
 		ft_printf("ft_otool: at least one option must be specified\n");
+		nm_otool_usage(FT_OTOOL);
 		return (EXIT_FAILURE);
 	}
 	while (i < n_files)
@@ -47,9 +48,8 @@ int	main(int ac, char **av)
 	if ((nb_files = invalid_parameters(ac, av, &opts, files)) == -1)
 	{
 		ft_dprintf(2,
-				"ft_otool: Unknown command line argument '%s'. \
-Try ft_otool -h for help\n",
-				files[0]);
+				"ft_otool: Unknown command line argument '%s'.\n", files[0]);
+		nm_otool_usage(FT_OTOOL);
 		return (1);
 	}
 	return (otool(files, nb_files, opts));

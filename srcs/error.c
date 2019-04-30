@@ -6,13 +6,35 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:28 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/29 16:46:07 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 17:05:47 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-uint8_t	handle_error(char *path, uint8_t error, uint16_t opts)
+uint16_t	nm_otool_usage(uint16_t bin)
+{
+	ft_printf("Usage : %s [options] <input files>\n", bin == FT_NM
+		? "ft_nm" : "ft_otool");
+	if (bin & FT_NM)
+	{
+		ft_printf("\t-A\tDisplay name of file in prefix\n");
+		ft_printf("\t-g\tDisplay only external symbols\n");
+		ft_printf("\t-j\tOnly display name of symbol\n\t-n\tSort by value\n");
+		ft_printf("\t-p\tNo sort\n\t-r\tReverse sort\n");
+		ft_printf("\t-U\tDislay only defined symbols\n");
+		ft_printf("\t-u\tDisplay only undefined symbols (name of symbol)\n");
+	}
+	else
+	{
+		ft_printf("\t-t\tDisplay the contents of (__TEXT,__text) section\n");
+		ft_printf("\t-d\tDisplay the contents of (__DATA,__data) section\n");
+		ft_printf("\t-h\tDisplay the Mach header\n");
+	}
+	return (1);
+}
+
+uint8_t		handle_error(char *path, uint8_t error, uint16_t opts)
 {
 	if (opts & FT_NM)
 		ft_dprintf(2, "ft_nm: ");
@@ -35,7 +57,7 @@ uint8_t	handle_error(char *path, uint8_t error, uint16_t opts)
 	return (1);
 }
 
-uint8_t	invalid_filetype(char *ptr)
+uint8_t		invalid_filetype(char *ptr)
 {
 	uint32_t	magic;
 

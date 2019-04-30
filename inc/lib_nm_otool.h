@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/30 16:30:24 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:54:55 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ uint8_t			handle_file(char *arg, uint8_t res, uint16_t opts);
 uint8_t			handle_error(char *path, uint8_t error, uint16_t opts);
 uint8_t			invalid_filetype(char *ptr);
 int				invalid_parameters(int ac, char **av, uint16_t *o, char *fil[]);
+uint16_t		nm_otool_usage(uint16_t bin);
 
 uint8_t			handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r);
 
