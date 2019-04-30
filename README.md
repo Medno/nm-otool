@@ -47,6 +47,6 @@ Options for **ft_otool**:
 
 - -d : Display the content of __data section
 
-- -d : Display the Mach header
+- -h : Display the Mach header
 
 Holy Bible of Mach-O format : [OS X ABI Mach-O File Format Reference](https://pewpewthespells.com/re/Mach-O_File_Format.pdf)
