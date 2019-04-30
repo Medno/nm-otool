@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 17:12:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/30 16:21:24 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:44:49 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ int			handle_opts(char *str, uint16_t *opts, size_t size)
 		else if (*opts & FT_OTOOL)
 		{
 			if (str[i] == 't')
-				*opts = *opts ^ OPT_T;
-			else if (str[i] == 'd' && !(*opts & OPT_D))
-				*opts = *opts ^ OPT_D;
-			else if (str[i] == 'h' && !(*opts & OPT_H))
-				*opts = *opts ^ OPT_H;
+				*opts = *opts | OPT_T;
+			else if (str[i] == 'd')
+				*opts = *opts | OPT_D;
+			else if (str[i] == 'h')
+				*opts = *opts | OPT_H;
 			else
 				return (1);
 		}
