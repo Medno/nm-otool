@@ -6,25 +6,26 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/29 18:30:41 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 14:12:01 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-static t_section	*find_sect(t_fhead *head)
+static uint8_t		find_sect(t_fhead *head, t_section *sect, uint16_t opt)
 {
 	uint32_t	i;
 
 	i = 0;
 	while (i < head->macho.n_sects
 			&& ((!ft_strequ(head->macho.sect[i].name, SECT_TEXT)
-			&& head->opts & OPT_T) || (head->opts & OPT_D
+			&& opt == OPT_T) || (opt == OPT_D
 			&& !ft_strequ(head->macho.sect[i].name, SECT_DATA))))
 		i++;
 	if (i == head->macho.n_sects)
-		return (NULL);
-	return (&head->macho.sect[i]);
+		return (0);
+	*sect = head->macho.sect[i];
+	return (1);
 }
 
 static void			print_otool(t_fhead *head, t_section *sect, uint8_t padding)
@@ -53,6 +54,7 @@ static void			print_otool(t_fhead *head, t_section *sect, uint8_t padding)
 		if (!space && i % 4 == 0 && i)
 			ft_putchar(' ');
 	}
+	ft_putchar('\n');
 }
 
 static void			print_header(t_finfo f, t_fhead *head)
@@ -60,12 +62,17 @@ static void			print_header(t_finfo f, t_fhead *head)
 	if (head->opts & FT_NM && ((head->archive || (head->fat && head->fat_arch))
 				|| (head->opts & MULT)))
 		ft_putchar('\n');
-	if (head->opts & FT_OTOOL && head->archive == 1 && (head->archive = 2))
-		ft_printf("Archive : %s\n", f.name);
-	else if (head->opts & FT_OTOOL && head->fat && head->fat_arch)
-		ft_printf("%s (architecture %s):\n", f.name, head->fat_arch);
-	else if (head->opts & FT_OTOOL && !head->archive)
-		ft_printf("%s:\n", f.name);
+	if (head->opts & FT_OTOOL)
+	{
+		if (head->archive == 1 && (head->archive = 2))
+			ft_printf("Archive : %s\n", f.name);
+		else if (!(head->opts & OPT_H) && head->fat && head->fat_arch)
+			ft_printf("%s (architecture %s):\n", f.name, head->fat_arch);
+		else if (!(head->opts & OPT_H) && !head->archive)
+			ft_printf("%s:\n", f.name);
+	}
+	if ((head->opts ^ OPT_H) == FT_OTOOL)
+		return ;
 	if (head->archive && !head->fat_arch)
 		ft_printf("%s(%s):\n", f.name, head->macho.obj_name);
 	else if (head->archive)
@@ -80,20 +87,21 @@ static void			print_header(t_finfo f, t_fhead *head)
 void				print_symbols(t_finfo f, t_fhead *h)
 {
 	uint8_t		padding;
-	t_section	*sect;
+	t_section	sect;
 
 	padding = h->macho.is64 ? 16 : 8;
 	if (!(h->opts & OPT_A))
 		print_header(f, h);
+	if ((h->opts ^ OPT_H) == FT_OTOOL)
+		return ;
 	if ((h->opts & FT_NM) && !((h->opts & OPT_U) && (h->opts & OPT_UP_U)))
 		print_nm(f, h);
 	else if (h->opts & FT_OTOOL)
 	{
-		sect = find_sect(h);
-		if (!sect)
-			return ;
-		print_otool(h, sect, padding);
-		ft_putchar('\n');
+		if (h->opts & OPT_T && find_sect(h, &sect, OPT_T))
+			print_otool(h, &sect, padding);
+		if (h->opts & OPT_D && find_sect(h, &sect, OPT_D))
+			print_otool(h, &sect, padding);
 	}
 }
 

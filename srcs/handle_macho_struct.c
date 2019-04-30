@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 17:05:35 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 15:52:09 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 13:27:32 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,7 @@ uint8_t	handle_macho(t_finfo file, t_fhead *head, t_sc *sc)
 	if (!res)
 	{
 		m_sort(head, 0, head->macho.n_syms - 1);
-		if (!(head->opts & OPT_H))
-			print_symbols(file, head);
+		print_symbols(file, head);
 		free_array(head, head->macho.n_syms);
 	}
 	else
