@@ -66,9 +66,10 @@ static void			print_header(t_finfo f, t_fhead *head)
 	{
 		if (head->archive == 1 && (head->archive = 2))
 			ft_printf("Archive : %s\n", f.name);
-		else if (!(head->opts & OPT_H) && head->fat && head->fat_arch)
+		else if ((head->opts ^ OPT_H) != FT_OTOOL
+			&& head->fat && head->fat_arch)
 			ft_printf("%s (architecture %s):\n", f.name, head->fat_arch);
-		else if (!(head->opts & OPT_H) && !head->archive)
+		else if ((head->opts ^ OPT_H) != FT_OTOOL && !head->archive)
 			ft_printf("%s:\n", f.name);
 	}
 	if ((head->opts ^ OPT_H) == FT_OTOOL)

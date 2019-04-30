@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 17:12:57 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/29 15:28:45 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:21:24 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,6 @@ static int	handle_nm_opts(char t, uint16_t *opts)
 	return (0);
 }
 
-static void	filter_opts(uint16_t *opts)
-{
-	if ((*opts & OPT_U) && !(*opts & OPT_J))
-		*opts = *opts ^ OPT_J;
-}
-
 int			handle_opts(char *str, uint16_t *opts, size_t size)
 {
 	size_t	i;
@@ -53,40 +47,17 @@ int			handle_opts(char *str, uint16_t *opts, size_t size)
 		else if (*opts & FT_OTOOL)
 		{
 			if (str[i] == 't')
-				*opts = *opts | OPT_T;
+				*opts = *opts ^ OPT_T;
 			else if (str[i] == 'd' && !(*opts & OPT_D))
 				*opts = *opts ^ OPT_D;
 			else if (str[i] == 'h' && !(*opts & OPT_H))
 				*opts = *opts ^ OPT_H;
+			else
+				return (1);
 		}
 		i++;
 	}
-	if (*opts & FT_NM)
-		filter_opts(opts);
 	return (0);
-}
-
-uint8_t		handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r)
-{
-	uint8_t	condition;
-	char	*f_str;
-	char	*s_str;
-
-	f_str = e_l.name;
-	s_str = e_r.name;
-	if (head->opts & OPT_N)
-		condition = ((!e_l.value && !e_r.value && ft_strcmp(f_str, s_str) < 0
-			&& e_l.type == e_r.type) || (!e_l.value && e_l.type == 1)
-			|| (!e_l.value && e_r.value)
-			|| (e_l.value && e_r.value && e_l.value < e_r.value)
-			|| (e_l.value && e_l.value == e_r.value
-				&& ft_strcmp(f_str, s_str) < 0));
-	else
-		condition = ft_strcmp(f_str, s_str) < 0
-			|| (ft_strequ(f_str, s_str) && e_l.value < e_r.value);
-	if (head->opts & OPT_R)
-		condition = !condition;
-	return (condition);
 }
 
 int			invalid_parameters(int ac, char **av, uint16_t *opts, char *files[])
@@ -115,4 +86,27 @@ int			invalid_parameters(int ac, char **av, uint16_t *opts, char *files[])
 		i++;
 	}
 	return (nb_files);
+}
+
+uint8_t		handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r)
+{
+	uint8_t	condition;
+	char	*f_str;
+	char	*s_str;
+
+	f_str = e_l.name;
+	s_str = e_r.name;
+	if (head->opts & OPT_N)
+		condition = ((!e_l.value && !e_r.value && ft_strcmp(f_str, s_str) < 0
+			&& e_l.type == e_r.type) || (!e_l.value && e_l.type == 1)
+			|| (!e_l.value && e_r.value)
+			|| (e_l.value && e_r.value && e_l.value < e_r.value)
+			|| (e_l.value && e_l.value == e_r.value
+				&& ft_strcmp(f_str, s_str) < 0));
+	else
+		condition = ft_strcmp(f_str, s_str) < 0
+			|| (ft_strequ(f_str, s_str) && e_l.value < e_r.value);
+	if (head->opts & OPT_R)
+		condition = !condition;
+	return (condition);
 }

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:47 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/17 14:56:38 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:16:24 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,7 @@ int		main(int ac, char **av)
 			, files[0]);
 		return (1);
 	}
+	if ((opts & OPT_U) && !(opts & OPT_J))
+		opts = opts ^ OPT_J;
 	return (nm(files, nb_files, opts));
 }
