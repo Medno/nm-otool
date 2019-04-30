@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/30 16:54:55 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 17:10:59 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ typedef struct	s_univ_nlist
 
 typedef struct	s_section
 {
-	char			*name;
-	char			*seg_name;
-	uint32_t		offset;
-	uint64_t		size;
-	uint64_t		addr;
+	char		*name;
+	char		*seg_name;
+	uint32_t	offset;
+	uint64_t	size;
+	uint64_t	addr;
 }				t_section;
 
-typedef struct	s_symbols
+typedef struct	s_machinfo
 {
 	char		*obj_name;
 	t_section	sect[255];
@@ -72,7 +72,7 @@ typedef struct	s_symbols
 	t_ulist		*arr;
 	uint8_t		len_value;
 	t_mh64		header;
-}				t_symbols;
+}				t_machinfo;
 
 typedef struct	s_finfo
 {
@@ -88,7 +88,7 @@ typedef struct	s_fhead
 	uint8_t		fat;
 	uint64_t	fat_size;
 	char		*fat_arch_ptr;
-	t_symbols	macho;
+	t_machinfo	macho;
 	char		*current;
 	char		*fat_arch;
 }				t_fhead;
@@ -136,7 +136,7 @@ uint8_t			handle_sort(t_fhead *head, t_ulist e_l, t_ulist e_r);
 
 uint8_t			display_mach_header(t_fhead *head);
 
-char			find_sym_type(t_symbols *sy, uint8_t t, uint64_t v, uint8_t s);
+char			find_sym_type(t_machinfo *sy, uint8_t t, uint64_t v, uint8_t s);
 char			*cpu_name(cpu_type_t ct, cpu_subtype_t sub);
 void			print_symbols(t_finfo f, t_fhead *h);
 void			print_nm(t_finfo f, t_fhead *h);
