@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 15:49:23 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/30 14:12:01 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:31:15 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ static void			print_otool(t_fhead *head, t_section *sect, uint8_t padding)
 	uint8_t		space;
 
 	i = 0;
-	space = head->macho.cpu_type == CPU_TYPE_X86_64
-		|| head->macho.cpu_type == CPU_TYPE_I386;
+	space = head->macho.header.cputype == CPU_TYPE_X86_64
+		|| head->macho.header.cputype == CPU_TYPE_I386;
 	ft_printf("Contents of (%s,%s) section", sect->seg_name, sect->name);
 	while (i < sect->size)
 	{
@@ -59,8 +59,8 @@ static void			print_otool(t_fhead *head, t_section *sect, uint8_t padding)
 
 static void			print_header(t_finfo f, t_fhead *head)
 {
-	if (head->opts & FT_NM && ((head->archive || (head->fat && head->fat_arch))
-				|| (head->opts & MULT)))
+	if (head->opts & FT_NM && ((head->archive
+		|| (head->fat && head->fat_arch)) || (head->opts & MULT)))
 		ft_putchar('\n');
 	if (head->opts & FT_OTOOL)
 	{

@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 17:49:41 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/29 17:02:48 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:30:24 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,6 @@ typedef struct	s_symbols
 	t_lc		*lc;
 	uint8_t		l_endian;
 	uint32_t	magic;
-	cpu_type_t	cpu_type;
-	uint32_t	n_cmds;
-	uint32_t	s_lc;
 	uint8_t		is64;
 	t_ulist		*arr;
 	uint8_t		len_value;

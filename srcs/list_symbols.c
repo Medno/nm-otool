@@ -6,7 +6,7 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:25:49 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/30 13:24:02 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:28:10 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ uint8_t	fill_struct(t_finfo file, t_fhead *head, t_lc *lc)
 	uint32_t	lc_cmd;
 
 	i = 0;
-	while (i < head->macho.n_cmds)
+	while (i < head->macho.header.ncmds)
 	{
 		lc_cmd = to_big_endian(head->macho.l_endian, lc->cmd);
 		lc_cmdsize = to_big_endian(head->macho.l_endian, lc->cmdsize);
-		if ((char *)lc + lc_cmdsize > (char *)head->macho.lc + head->macho.s_lc
-			|| (head->macho.is64 && lc_cmdsize % 8)
-			|| (!head->macho.is64 && lc_cmdsize % 4))
+		if ((char *)lc + lc_cmdsize > (char *)head->macho.lc +
+		head->macho.header.sizeofcmds || (head->macho.is64 && lc_cmdsize % 8)
+		|| (!head->macho.is64 && lc_cmdsize % 4))
 			return (1);
 		if (lc_cmd == LC_SEGMENT_64 && add_sect_64(file, head, lc))
 			return (1);
@@ -63,7 +63,7 @@ uint8_t	list_symbols(t_finfo file, t_fhead *head, char *obj_n)
 	lc = head->macho.lc;
 	if (fill_struct(file, head, lc))
 		return (handle_error(file.name, E_CORRUPT, head->opts));
-	while (i < head->macho.n_cmds)
+	while (i < head->macho.header.ncmds)
 	{
 		lc_cmdsize = to_big_endian(head->macho.l_endian, lc->cmdsize);
 		if (to_big_endian(head->macho.l_endian, lc->cmd) == LC_SYMTAB)
