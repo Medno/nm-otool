@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/04/12 17:53:44 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/04/30 15:05:06 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ MAIN_SRCS = type.c					\
 			print.c					\
 			print_nm.c				\
 			tools.c					\
+			tools_2.c				\
 			symbols_struct.c		\
 			handle_fat.c			\
 			handle_archive.c		\

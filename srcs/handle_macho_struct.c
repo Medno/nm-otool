@@ -6,34 +6,21 @@
 /*   By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 17:05:35 by pchadeni          #+#    #+#             */
-/*   Updated: 2019/04/30 13:27:32 by pchadeni         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:39:02 by pchadeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_nm_otool.h"
 
-uint8_t	free_array(t_fhead *head, uint32_t end)
+uint8_t	dup_stab_name(t_fhead *head, uint8_t bs, char *str, uint32_t i)
 {
-	uint32_t	i;
-
-	i = 0;
-	while (i < end)
-	{
-		free(head->macho.arr[i].name);
-		i++;
-	}
-	return (1);
-}
-
-uint8_t	get_length_value(uint64_t value)
-{
-	uint8_t	res;
-	char	*itoa_str;
-
-	itoa_str = ft_itoa_base(value, 16);
-	res = ft_strlen(itoa_str);
-	free(itoa_str);
-	return (res);
+	if (bs)
+		head->macho.arr[i].name = ft_strdup("bad string index");
+	else
+		head->macho.arr[i].name = ft_strdup(str);
+	if (!head->macho.arr[i].name)
+		return (1);
+	return (0);
 }
 
 uint8_t	handle_32(t_fhead *head, char *str_tab, uint32_t strsize, uint32_t soff)
@@ -49,10 +36,8 @@ uint8_t	handle_32(t_fhead *head, char *str_tab, uint32_t strsize, uint32_t soff)
 		strx = to_big_endian(head->macho.l_endian, nl->n_un.n_strx);
 		if (strx > strsize && head->opts & FT_OTOOL)
 			return (free_array(head, i));
-		else if (strx > strsize)
-			head->macho.arr[i].name = ft_strdup("bad string index");
-		else
-			head->macho.arr[i].name = ft_strdup(strx + str_tab);
+		else if (dup_stab_name(head, strx > strsize, strx + str_tab, i))
+			return (free_array(head, i));
 		head->macho.arr[i].type = nl->n_type;
 		head->macho.arr[i].sect = nl->n_sect;
 		head->macho.arr[i].value =
@@ -78,10 +63,8 @@ uint8_t	handle_64(t_fhead *head, char *str_tab, uint32_t strsize, uint32_t soff)
 		strx = to_big_endian(head->macho.l_endian, nl_64->n_un.n_strx);
 		if (strx > strsize && (head->opts & FT_OTOOL) && !(head->opts & OPT_H))
 			return (free_array(head, i));
-		else if (strx > strsize)
-			head->macho.arr[i].name = ft_strdup("bad string index");
-		else
-			head->macho.arr[i].name = ft_strdup(strx + str_tab);
+		else if (dup_stab_name(head, strx > strsize, strx + str_tab, i))
+			return (free_array(head, i));
 		head->macho.arr[i].type = nl_64->n_type;
 		head->macho.arr[i].sect = nl_64->n_sect;
 		head->macho.arr[i].value =
