@@ -49,4 +49,4 @@ Options for **ft_otool**:
 
 - -h : Display the Mach header
 
-Holy Bible of Mach-O format : [OS X ABI Mach-O File Format Reference](https://pewpewthespells.com/re/Mach-O_File_Format.pdf)
+Holy Bible of Mach-O format : [OS X ABI Mach-O File Format Reference](https://github.com/aidansteele/osx-abi-macho-file-format-reference)
